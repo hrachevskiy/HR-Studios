@@ -6,6 +6,11 @@ import gen
 from gen import E, ICON, LESSONS, FILES, COURSE, TEACHER, SITE, file_card, slides_of, KIND
 
 WORKS = [
+ dict(t='Իրացվելիություն և ֆինանսական կայունություն', l='Դաս 2–3', img='liquidity', items=[('📰','Ինտերակտիվ հաշվետվություն («թերթ»)','hw/dasi-2-3/index.html','Առաջադրանք 1 և 2 · 9 գծապատկեր'),('📗','Excel լուծում','files/Das2-3_Irachvelutyun_Kayunutyun_Hrachya_Aslanyan.xlsx','112 բանաձև · 4 գծապատկեր')], page='lesson-2.html'),
+ dict(t='Հիմնական միջոցների վերլուծություն', l='Դաս 4', img='factory', items=[('📐','Ինտերակտիվ «տեխնիկական անձնագիր»','hw/dasi-4/index.html','14 ցուցանիշ · գործոնային վերլուծություն'),('📗','Excel լուծում','files/Das4_Himnakan_mijocner_Hrachya_Aslanyan.xlsx','84 բանաձև · 2 գծապատկեր')], page='lesson-4.html'),
+ dict(t='Նյութական պաշարների վերլուծություն', l='Դաս 5', img='warehouse', items=[('🟥','Ինտերակտիվ պաստառ','hw/dasi-5/index.html','Տնային 1 և 2 · շղթայական տեղադրում'),('📗','Excel լուծում','files/Das5_Nyutakan_pasharner_Hrachya_Aslanyan.xlsx','100 բանաձև · 3 գծապատկեր')], page='lesson-5.html'),
+ dict(t='Աշխատանքային ռեսուրսների վերլուծություն', l='Դաս 6', img='team', items=[('📒','Ինտերակտիվ «տետր»','hw/dasi-6/index.html','2 վերլուծություն · 12 գործոն'),('📗','Excel լուծում','files/Das6_Ashkhatank_Hrachya_Aslanyan.xlsx','91 բանաձև · 2 գծապատկեր')], page='lesson-6.html'),
+ dict(t='1-ին միջանկյալ · տնային (մատյան № 5)', l='Միջանկյալ', img='midterm', items=[('🏅','Ինտերակտիվ դոսյե · 5 խնդիր','hw/midterm-1/index.html','տվյալները փոփոխված են ըստ № 5-ի'),('📗','Excel լուծում','files/Midterm1_Matyan5_Hrachya_Aslanyan.xlsx','344 բանաձև · 10 գծապատկեր')], page='index.html#library'),
  dict(t='Դրամական միջոցների վերլուծություն', l='Դաս 7', img='cashflow', items=[('🎬','Անիմացիոն ներկայացում','t7/index.html','18 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t7/index.html#excel','բոլոր աղյուսակները'),('📗','Excel լուծում','files/Tema7_Dramakan_mijocner_Hrachya_Aslanyan.xlsx','527 բանաձև · 9 գծապատկեր')], page='lesson-7.html'),
  dict(t='Դեբիտորական և կրեդիտորական պարտքեր', l='Դաս 8', img='handshake', items=[('🎬','Անիմացիոն ներկայացում','t8/index.html','16 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t8/index.html#excel','9 բաժին'),('📗','Excel լուծում','files/Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx','376 բանաձև · 9 գծապատկեր')], page='lesson-8.html'),
 ]
@@ -232,14 +237,13 @@ def build_index():
     open(os.path.join(SITE, 'index.html'), 'w').write(gen.head(f'{COURSE} · H/R Studios', 'Ուսումնական հարթակ ԻՏ-447 խմբի համար', INTRO2) + body)
 
 def works_cards():
-    return ''.join(f'''<div class="wk rv"><div class="im" style="background-image:url('assets/gen/{w["img"]}.jpg')"><b>{w["l"]}</b></div><div class="ct"><h3>{E(w["t"])}</h3><div class="its">{"".join(f'<a class="it" href="{u}"{" download" if u.endswith(".xlsx") else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span><span class="ar">→</span></a>' for ic,n,u,s in w["items"])}<a class="it" href="{w["page"]}"><span class="ic">📘</span><span><b>Դասի էջը</b><small>բացատրություն, բանաձևեր, սլայդներ</small></span><span class="ar">→</span></a></div></div></div>''' for w in WORKS)
+    return ''.join(f'''<div class="wk rv"><div class="im" style="background-image:url('assets/gen/{w["img"]}.jpg')"><b>{w["l"]}</b></div><div class="ct"><h3>{E(w["t"])}</h3><div class="its">{"".join(f'<a class="it" href="{u}"{" download" if u.endswith(".xlsx") else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span><span class="ar">→</span></a>' for ic,n,u,s in w["items"])}<a class="it" href="{w["page"]}"><span class="ic">📘</span><span><b>{"Դասի էջը" if w["page"].startswith("lesson") else "Առաջադրանքը գրադարանում"}</b><small>{"բացատրություն, բանաձևեր, սլայդներ" if w["page"].startswith("lesson") else "դասախոսի ֆայլերը"}</small></span><span class="ar">→</span></a></div></div></div>''' for w in WORKS)
 
 def build_works():
     body = f'''{header('')}
 <section class="hero2" style="min-height:min(560px,80vh)"><div class="bgi" style="background-image:url('assets/gen/works.jpg')"></div><i class="orb a"></i><i class="orb b"></i>
 <div class="wrap" style="grid-template-columns:1fr"><div><div class="kick">H/R Studios · Հրաչյա Ասլանյան</div><h1>{words("Իմ աշխատանքները")}</h1><p class="lead">Ներկայացումներ, դաշբորդներ և Excel լուծումներ՝ «{E(COURSE)}» առարկայից։</p></div></div></section>
-<section class="sec"><div class="wrap"><div class="wkgrid">{works_cards()}</div>
-<div class="card rv" style="margin-top:20px;display:flex;gap:16px;align-items:center"><span style="font-size:34px">⏳</span><div><b>Շուտով</b><p style="margin:4px 0 0;color:var(--sub)">Դասեր 1–6-ի և 1-ին միջանկյալի տնայինների լուծումները կավելանան այստեղ։</p></div></div></div></section>
+<section class="sec"><div class="wrap"><div class="wkgrid">{works_cards()}</div></div></section>
 {footer()}{gen.JS}</body></html>'''
     open(os.path.join(SITE, 'works.html'), 'w').write(gen.head('Իմ աշխատանքները · H/R Studios', 'Հրաչյա Ասլանյանի աշխատանքները') + body)
 
