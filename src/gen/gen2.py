@@ -11,6 +11,19 @@ WORKS = [
 ]
 
 CSS2 = r'''
+
+.ltabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.ltab{flex:none;text-align:left;border:1px solid var(--line);background:var(--glass);color:var(--sub);font:700 14px var(--body);padding:10px 16px;border-radius:16px;cursor:pointer;transition:all .2s}
+.ltab small{display:block;font-weight:500;font-size:11.5px;color:var(--dim)}.ltab.on{background:linear-gradient(135deg,rgba(61,255,143,.2),rgba(92,214,255,.1));color:var(--tx);border-color:rgba(61,255,143,.55);box-shadow:0 10px 30px rgba(61,255,143,.15)}
+.lpane{display:none;margin-top:16px;animation:paneIn .45s cubic-bezier(.2,.7,.2,1)}.lpane.on,.lpanes.q .lpane{display:block}.lpanes.q .lphead,.lpanes.q .hrpair{display:none}
+@keyframes paneIn{from{opacity:0;transform:translateY(10px)}}
+.lphead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:14px}.lphead h3{margin:6px 0 0;font:800 24px var(--disp)}
+.hrpair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hrc{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:20px;text-decoration:none;background:linear-gradient(135deg,rgba(61,255,143,.14),rgba(169,139,255,.08));border:1px solid rgba(61,255,143,.4);transition:transform .2s,box-shadow .2s}
+.hrc:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(61,255,143,.2)}.hrc b{display:block;font-size:15px}.hrc small{color:var(--sub);font-size:12.5px}.hrc i{margin-left:auto;font-style:normal;font-size:20px}
+.hrc .ty{flex:none;width:46px;height:52px;border-radius:10px;display:grid;place-items:center;font:800 11px var(--num);color:#fff}
+.ib.hrb{background:linear-gradient(135deg,rgba(61,255,143,.3),rgba(169,139,255,.2));border-color:rgba(61,255,143,.5)}
+@media (max-width:640px){.hrpair{grid-template-columns:1fr}.lphead{flex-direction:column;align-items:flex-start}}
 /* ===== v2 motion & imagery ===== */
 .prog{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);z-index:60;background:linear-gradient(90deg,var(--g),var(--c),var(--v));box-shadow:0 0 12px var(--g)}
 .cglow{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(61,255,143,.10),transparent 62%);transform:translate3d(-999px,-999px,0);transition:opacity .4s;will-change:transform}
@@ -79,12 +92,42 @@ CSS2 = r'''
 .intro{background:#000}.intro video{opacity:1}
 .intro::after{background:radial-gradient(80% 80% at 50% 50%,transparent 55%,rgba(0,0,0,.65))}
 .intro .ct{position:absolute;left:0;right:0;bottom:40px}
-.intro .pr{margin-top:0}.intro .snd{position:absolute;bottom:28px;left:28px;z-index:3}
+.intro .pr{margin-top:0}.intro .ild{font:600 13px var(--body);color:var(--dim);margin-top:10px;letter-spacing:.2em}.intro .iplay{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%)}.intro .snd{position:absolute;bottom:28px;left:28px;z-index:3}
 .mag{transition:transform .25s cubic-bezier(.2,.7,.2,1)}
 @media (max-width:980px){.hero2 .wrap{grid-template-columns:1fr}.hcard{transform:none}.feature{grid-template-columns:1fr}.wkgrid{grid-template-columns:1fr}.wgrp{grid-template-columns:1fr}.wgrp .ph{min-height:120px}}
 @media (max-width:640px){.works-btn .t{display:none}.works-btn{padding:8px 11px}.logo .wd small{display:none}}
-@media (prefers-reduced-motion:reduce){.hero2 .bgi,.orb,.marq .tr,.lhero .ph,.works-btn::after{animation:none}.w{animation:none;opacity:1;transform:none;filter:none}}
+@media (prefers-reduced-motion:reduce){.intro.bye{transition:none}.hero2 .bgi,.orb,.marq .tr,.lhero .ph,.works-btn::after{animation:none}.w{animation:none;opacity:1;transform:none;filter:none}}
 '''
+
+
+def hr_pair(L, compact=False):
+    mat = L['mat']; n = L['n']
+    a = f'materials/{mat}/HR_Das{n}_prezentacia.pptx'; b = f'materials/{mat}/HR_Das{n}_konspekt.pdf'
+    return f"""<div class="hrpair{' cmp' if compact else ''}"><a class="hrc" href="{a}" download><span class="ty pptx">PPTX</span><span><b>✨ H/R ներկայացում</b><small>Դասախոսի սլայդները նոր ձևավորմամբ + բանաձևեր և բառարան · {gen.fsize(os.path.join(SITE,a))}</small></span><i>⬇</i></a>
+<a class="hrc" href="{b}" target="_blank" rel="noopener"><span class="ty pdf">PDF</span><span><b>✨ H/R կոնսպեկտ</b><small>Ամբողջ դասը մեկ գեղեցիկ PDF-ում · {gen.fsize(os.path.join(SITE,b))}</small></span><i>👁</i></a></div>"""
+
+def file_card2(mat, f, title, kind, lesson_label=''):
+    c = gen.file_card_orig(mat, f, title, kind, lesson_label)
+    L = next((x for x in LESSONS if x['mat'] == mat), None)
+    if L and kind in ('slides', 'lecture'):
+        hr = f'materials/{mat}/HR_Das{L["n"]}_' + ('prezentacia.pptx' if kind == 'slides' else 'konspekt.pdf')
+        c = c.replace('<div class="ac">', f'<div class="ac"><a class="ib hrb" href="{hr}" {"download" if hr.endswith(".pptx") else "target=_blank"} title="H/R տարբերակ (գեղեցիկ)">✨</a>', 1)
+        c = c.replace('title="Ներբեռնել">', 'title="Ներբեռնել բնօրինակը">', 1)
+    return c
+
+def library_tabs():
+    tabs = ''; panes = ''
+    groups = [(L['mat'], f'Դաս {L["n"]}', L) for L in LESSONS] + [('mid', 'Միջանկյալ', None)]
+    for i, (m, lab, L) in enumerate(groups):
+        on = ' on' if i == len(LESSONS) - 1 else ''
+        tabs += f'<button class="ltab{on}" data-p="{m}">{lab}{f"<small>{E(L["short"])}</small>" if L else "<small>1-ին ստուգում</small>"}</button>'
+        head = (f'<div class="lphead"><div><div class="kick">Դաս {L["n"]} · {E(L["date"])}</div><h3>{E(L["t"])}</h3></div><a class="btn gh" href="{L["slug"]}.html">Դասի էջը →</a></div>' + hr_pair(L)) if L else '<div class="lphead"><div><div class="kick">Քննություն</div><h3>1-ին միջանկյալ ստուգում</h3></div></div>'
+        files = ''.join(file_card2(m, f, t, k) for f, t, k in FILES[m])
+        panes += f'<div class="lpane{on}" data-p="{m}">{head}<div class="kick" style="margin:18px 0 10px">Դասախոսի բնօրինակ ֆայլերը</div><div class="files">{files}</div></div>'
+    return f'<div class="ltabs">{tabs}</div><div class="lpanes">{panes}</div>'
+
+LIBJS = r"""<script>(function(){const t=document.querySelectorAll('.ltab'),p=document.querySelectorAll('.lpane');t.forEach(b=>b.onclick=()=>{t.forEach(x=>x.classList.toggle('on',x===b));p.forEach(x=>x.classList.toggle('on',x.dataset.p===b.dataset.p));});
+const s=document.getElementById('srch2');s&&s.addEventListener('input',()=>{const q=s.value.trim().toLowerCase();document.querySelector('.lpanes').classList.toggle('q',!!q);document.querySelectorAll('.lpane .fc').forEach(c=>c.style.display=(!q||c.textContent.toLowerCase().includes(q))?'':'none');});})();</script>"""
 
 def wpanel():
     g = ''.join(f'''<div class="wgrp"><div class="ph" style="background-image:url('assets/gen/{w["img"]}_s.jpg')"><b>{w["l"]}</b></div><div><h4>{E(w["t"])}</h4>{"".join(f'<a class="witem" href="{u}"{" download" if u.endswith(".xlsx") else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span></a>' for ic,n,u,s in w["items"])}</div></div>''' for w in WORKS)
@@ -130,15 +173,20 @@ JS2 = r'''<script>
 })();
 </script>'''
 
-INTRO2 = '''<div class="intro" id="intro"><video id="ivid" src="assets/intro.mp4" muted autoplay playsinline preload="auto" poster="assets/intro_end.jpg"></video>
-<div class="ct"><div class="pr"><i id="ipr"></i></div></div>
+INTRO2 = '''<div class="intro" id="intro"><video id="ivid" muted playsinline preload="auto" poster="assets/intro_end.jpg"><source src="assets/intro.mp4" type="video/mp4"></video>
+<div class="ct"><div class="pr"><i id="ipr"></i></div><div class="ild" id="ild">Բեռնվում է…</div></div><button class="btn iplay" id="iplay" hidden>▶ Դիտել ինտրոն</button>
 <button class="btn gh snd" id="isnd" aria-label="Ձայն">🔇 Ձայն</button><button class="btn gh sk" id="iskip">Բաց թողնել →</button></div>
-<script>(function(){const I=document.getElementById('intro'),V=document.getElementById('ivid'),bar=document.getElementById('ipr');let seen=false;try{seen=sessionStorage.getItem('hr-intro2')==='1'}catch(e){}
-if(seen||matchMedia('(prefers-reduced-motion: reduce)').matches){I.remove();return}document.documentElement.style.overflow='hidden';
-let done=false;const fin=()=>{if(done)return;done=true;try{sessionStorage.setItem('hr-intro2','1')}catch(e){}I.classList.add('bye');document.documentElement.style.overflow='';setTimeout(()=>{V.pause();I.remove()},950)};
-V.addEventListener('timeupdate',()=>{if(V.duration)bar.style.width=(V.currentTime/V.duration*100)+'%'});V.addEventListener('ended',()=>setTimeout(fin,350));V.addEventListener('error',()=>setTimeout(fin,1200));
-const p=V.play();p&&p.catch(()=>setTimeout(fin,2500));setTimeout(fin,11000);
-document.getElementById('iskip').onclick=fin;const S=document.getElementById('isnd');S.onclick=()=>{V.muted=!V.muted;S.textContent=V.muted?'🔇 Ձայն':'🔊 Ձայն'};})();</script>'''
+<script>(function(){const I=document.getElementById('intro'),V=document.getElementById('ivid'),bar=document.getElementById('ipr'),L=document.getElementById('ild'),P=document.getElementById('iplay');
+let seen=false;try{seen=sessionStorage.getItem('hr-intro3')==='1'}catch(e){}if(/[?&]intro=1/.test(location.search))seen=false;if(seen){I.remove();return}
+document.documentElement.style.overflow='hidden';let done=false,started=false;
+const fin=()=>{if(done)return;done=true;try{sessionStorage.setItem('hr-intro3','1')}catch(e){}I.classList.add('bye');document.documentElement.style.overflow='';setTimeout(()=>{try{V.pause()}catch(e){}I.remove()},950)};
+V.addEventListener('progress',()=>{try{if(!started&&V.buffered.length&&V.duration)bar.style.width=Math.min(100,V.buffered.end(V.buffered.length-1)/V.duration*100)+'%'}catch(e){}});
+V.addEventListener('timeupdate',()=>{if(V.duration){started=true;L.textContent='';bar.style.width=(V.currentTime/V.duration*100)+'%'}});
+V.addEventListener('ended',()=>setTimeout(fin,400));V.addEventListener('error',()=>setTimeout(fin,1500));
+const go=()=>{const p=V.play();if(p&&p.catch)p.catch(()=>{P.hidden=false;L.textContent=''})};
+if(V.readyState>=3)go();else V.addEventListener('canplay',go,{once:true});V.load();
+P.onclick=()=>{P.hidden=true;V.play().catch(fin)};setTimeout(()=>{if(!started)fin()},15000);setTimeout(fin,25000);
+document.getElementById('iskip').onclick=fin;const S=document.getElementById('isnd');S.onclick=()=>{V.muted=!V.muted;S.textContent=V.muted?'🔇 Ձայն':'🔊 Ձայն';if(!started)go()};})();</script>'''
 
 def words(t, cls='', k0=0):
     return ' '.join(f'<span class="w {cls}" style="--k:{i+k0}">{E(x)}</span>' for i, x in enumerate(t.split()))
@@ -155,7 +203,7 @@ def build_index():
     kind_chips = '<button class="chip on" data-fk="all">Բոլոր տեսակները</button>' + ''.join(f'<button class="chip" data-fk="{k}">{v}</button>' for k, v in KIND.items())
     lab = {L['mat']: f'Դաս {L["n"]}' for L in LESSONS}; lab['mid'] = '1-ին միջանկյալ'
     lib = ''.join(file_card(m, f, t, k, lab[m]) for m, lst in FILES.items() for f, t, k in lst)
-    mid = ''.join(file_card('mid', f, t, k) for f, t, k in FILES['mid'])
+    mid = ''.join(file_card2('mid', f, t, k) for f, t, k in FILES['mid'])
     marq = ''.join(f'<span>{E(L["short"])}</span>' for L in LESSONS) * 2
     wk = works_cards()
     body = f'''{header('home')}
@@ -177,11 +225,10 @@ def build_index():
 <div class="grid g3 how"><div class="card rv"><div class="ic">📖</div><h3>1 · Կարդացեք պարզ տարբերակը</h3><p>Յուրաքանչյուր դասում կա «Դասը պարզ լեզվով» բաժինը՝ օրինակով, բանաձևերի բացատրությամբ և բառարանով։</p></div>
 <div class="card rv"><div class="ic">📊</div><h3>2 · Նայեք լուծված օրինակը</h3><p>Բացեք ներկայացումը և «Տվյալների սրահը»․ սեղմեք ցանկացած թվի վրա և կտեսնեք՝ ինչ բանաձևով է հաշվված։</p></div>
 <div class="card rv"><div class="ic">✍️</div><h3>3 · Կատարեք ինքնուրույն</h3><p>Ներբեռնեք դասախոսի Excel ձևանմուշը և հետևեք «Ինչպես կատարել» քայլերին։ Ամեն ինչ կարող եք ստուգել լուծված ֆայլով։</p></div></div></div></section>
-<section class="sec" id="library"><div class="wrap"><div class="feature" style="margin-bottom:30px"><div class="pic rv"><img src="assets/gen/papers.jpg" alt=""></div><div><div class="kick rv">Գրադարան</div><h2 class="rv">Դասախոսի բոլոր նյութերը</h2><p class="sd rv">PDF ֆայլերը բացվում են հենց բրաուզերում, մնացածը՝ կարող եք ներբեռնել։ Ֆիլտրեք ըստ դասի կամ տեսակի, կամ օգտվեք որոնումից։</p></div></div>
-<div class="lib-ctl rv">{lib_chips}</div><div class="lib-ctl rv">{kind_chips}<input class="srch" id="srch" placeholder="Որոնում՝ օրինակ «իրացվելիություն»"></div>
-<div class="files" id="libf">{lib}</div></div></section>
+<section class="sec" id="library"><div class="wrap"><div class="feature" style="margin-bottom:30px"><div class="pic rv"><img src="assets/gen/papers.jpg" alt=""></div><div><div class="kick rv">Գրադարան</div><h2 class="rv">Դասախոսի բոլոր նյութերը</h2><p class="sd rv">Ընտրեք դասը․ յուրաքանչյուր դասի համար կա դասախոսի բնօրինակը և մեր «✨ H/R տարբերակը»՝ գեղեցիկ ներկայացում և կոնսպեկտ։</p></div></div>
+<input class="srch" id="srch2" placeholder="Որոնում բոլոր դասերում՝ օրինակ «իրացվելիություն»" style="width:100%;margin-bottom:14px">{library_tabs()}</div></section>
 <section class="sec" id="midterm"><div class="wrap"><div class="feature"><div><div class="kick rv">Քննություն</div><h2 class="rv">1-ին միջանկյալ ստուգում</h2><p class="sd rv">Տնային առաջադրանքը (5 խնդիր) և տեսական հարցաշարը։</p><div class="files">{mid}</div></div><div class="pic rv"><img src="assets/gen/midterm.jpg" alt=""></div></div></div></section>
-{footer()}{gen.JS}</body></html>'''
+{footer()}{gen.JS}{LIBJS}</body></html>'''
     open(os.path.join(SITE, 'index.html'), 'w').write(gen.head(f'{COURSE} · H/R Studios', 'Ուսումնական հարթակ ԻՏ-447 խմբի համար', INTRO2) + body)
 
 def works_cards():
@@ -198,6 +245,7 @@ def build_works():
 
 if __name__ == '__main__':
     gen.CSS += CSS2
+    gen.file_card_orig = gen.file_card; gen.file_card = file_card2
     gen.footer_orig = gen.footer
     gen.header = header; gen.footer = footer
     gen.JS = gen.JS + JS2 if JS2 not in gen.JS else gen.JS
@@ -208,5 +256,6 @@ if __name__ == '__main__':
         gen.build_lesson(i, L)
         p = os.path.join(SITE, L['slug'] + '.html'); s = open(p).read()
         s = s.replace(f"assets/img/{L['img']}.jpg", f"assets/gen/{L['img']}.jpg")
+        s = s.replace('<h2 class="rv">Դասախոսի նյութերը</h2><div class="files">', '<h2 class="rv">Դասախոսի նյութերը</h2><div class="kick" style="margin-bottom:10px">✨ Մեր գեղեցիկ տարբերակը</div>' + hr_pair(L) + '<div class="kick" style="margin:22px 0 10px">Դասախոսի բնօրինակները</div><div class="files">', 1)
         open(p, 'w').write(s)
     print('v2 ok')
