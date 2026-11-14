@@ -164,7 +164,7 @@ JOBS = {
 if __name__ == "__main__":
     import os; os.makedirs(OUTDIR, exist_ok=True)
     which = sys.argv[3].split(",") if len(sys.argv) > 3 else list(JOBS)
-    tag = "Hrachya_Aslanyan" if "Հրաչյա" in AUTHOR else "Sargis_Antonyan"
+    tag = sys.argv[4] if len(sys.argv) > 4 else "Hrachya_Aslanyan"
     for k in which:
         fn, base, cf = JOBS[k]; p = f"{OUTDIR}/{base}_{tag}.xlsx"
         fn().save(p); recalc(p); c = cf(vals(p))
