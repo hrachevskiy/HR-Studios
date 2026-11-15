@@ -10,7 +10,7 @@ WORKS = [
  dict(t='Հիմնական միջոցների վերլուծություն', l='Դաս 4', img='factory', items=[('📐','Ինտերակտիվ «տեխնիկական անձնագիր»','hw/dasi-4/index.html','14 ցուցանիշ · գործոնային վերլուծություն'),('📗','Excel լուծում','files/Das4_Himnakan_mijocner_Hrachya_Aslanyan.xlsx','84 բանաձև · 2 գծապատկեր')], page='lesson-4.html'),
  dict(t='Նյութական պաշարների վերլուծություն', l='Դաս 5', img='warehouse', items=[('🟥','Ինտերակտիվ պաստառ','hw/dasi-5/index.html','Տնային 1 և 2 · շղթայական տեղադրում'),('📗','Excel լուծում','files/Das5_Nyutakan_pasharner_Hrachya_Aslanyan.xlsx','100 բանաձև · 3 գծապատկեր')], page='lesson-5.html'),
  dict(t='Աշխատանքային ռեսուրսների վերլուծություն', l='Դաս 6', img='team', items=[('📒','Ինտերակտիվ «տետր»','hw/dasi-6/index.html','2 վերլուծություն · 12 գործոն'),('📗','Excel լուծում','files/Das6_Ashkhatank_Hrachya_Aslanyan.xlsx','91 բանաձև · 2 գծապատկեր')], page='lesson-6.html'),
- dict(t='1-ին միջանկյալ · տնային (մատյան № 5)', l='Միջանկյալ', img='midterm', items=[('🏅','Ինտերակտիվ դոսյե · 5 խնդիր','hw/midterm-1/index.html','տվյալները փոփոխված են ըստ № 5-ի'),('📗','Excel լուծում','files/Midterm1_Matyan5_Hrachya_Aslanyan.xlsx','344 բանաձև · 10 գծապատկեր')], page='index.html#library'),
+ dict(t='1-ին միջանկյալ ստուգում (մատյան № 5)', l='Միջանկյալ', img='midterm', items=[('📊','Ինտերակտիվ դաշբորդ + PDF դիտիչ','hw/mijankyal/index.html','հանձնված աշխատանքը՝ 5 խնդիր'),('📄','PDF հաշվետվություն','files/Mijankyal_Hrachya_Aslanyan_N5.pdf','24 էջ'),('📗','Excel լուծում','files/Mijankyal_Hrachya_Aslanyan_N5.xlsx','6 թերթ · n-ը փոփոխելի')], page='index.html#library'),
  dict(t='Դրամական միջոցների վերլուծություն', l='Դաս 7', img='cashflow', items=[('🎬','Անիմացիոն ներկայացում','t7/index.html','18 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t7/index.html#excel','բոլոր աղյուսակները'),('📗','Excel լուծում','files/Tema7_Dramakan_mijocner_Hrachya_Aslanyan.xlsx','527 բանաձև · 9 գծապատկեր')], page='lesson-7.html'),
  dict(t='Դեբիտորական և կրեդիտորական պարտքեր', l='Դաս 8', img='handshake', items=[('🎬','Անիմացիոն ներկայացում','t8/index.html','16 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t8/index.html#excel','9 բաժին'),('📗','Excel լուծում','files/Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx','376 բանաձև · 9 գծապատկեր')], page='lesson-8.html'),
 ]
@@ -97,7 +97,7 @@ CSS2 = r'''
 .intro{background:#000}.intro video{opacity:1}
 .intro::after{background:radial-gradient(80% 80% at 50% 50%,transparent 55%,rgba(0,0,0,.65))}
 .intro .ct{position:absolute;left:0;right:0;bottom:40px}
-.intro .pr{margin-top:0}.intro .ild{font:600 13px var(--body);color:var(--dim);margin-top:10px;letter-spacing:.2em}.intro .iplay{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%)}.intro .snd{position:absolute;bottom:28px;left:28px;z-index:3}
+.intro .pr{margin-top:0}.intro .ild{transition:opacity .4s;font:600 13px var(--body);color:var(--dim);margin-top:10px;letter-spacing:.2em}.intro .iplay{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%)}.intro .snd{position:absolute;bottom:28px;left:28px;z-index:3}
 .mag{transition:transform .25s cubic-bezier(.2,.7,.2,1)}
 @media (max-width:980px){.hero2 .wrap{grid-template-columns:1fr}.hcard{transform:none}.feature{grid-template-columns:1fr}.wkgrid{grid-template-columns:1fr}.wgrp{grid-template-columns:1fr}.wgrp .ph{min-height:120px}}
 @media (max-width:640px){.works-btn .t{display:none}.works-btn{padding:8px 11px}.logo .wd small{display:none}}
@@ -135,7 +135,7 @@ LIBJS = r"""<script>(function(){const t=document.querySelectorAll('.ltab'),p=doc
 const s=document.getElementById('srch2');s&&s.addEventListener('input',()=>{const q=s.value.trim().toLowerCase();document.querySelector('.lpanes').classList.toggle('q',!!q);document.querySelectorAll('.lpane .fc').forEach(c=>c.style.display=(!q||c.textContent.toLowerCase().includes(q))?'':'none');});})();</script>"""
 
 def wpanel():
-    g = ''.join(f'''<div class="wgrp"><div class="ph" style="background-image:url('assets/gen/{w["img"]}_s.jpg')"><b>{w["l"]}</b></div><div><h4>{E(w["t"])}</h4>{"".join(f'<a class="witem" href="{u}"{" download" if u.endswith(".xlsx") else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span></a>' for ic,n,u,s in w["items"])}</div></div>''' for w in WORKS)
+    g = ''.join(f'''<div class="wgrp"><div class="ph" style="background-image:url('assets/gen/{w["img"]}_s.jpg')"><b>{w["l"]}</b></div><div><h4>{E(w["t"])}</h4>{"".join(f'<a class="witem" href="{u}"{" download" if u.endswith((".xlsx",".pdf")) else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span></a>' for ic,n,u,s in w["items"])}</div></div>''' for w in WORKS)
     return f'''<div class="wpanel" id="wpanel" role="dialog" aria-label="Իմ աշխատանքները"><h3>Իմ աշխատանքները</h3><p class="sd2">Բոլոր ներկայացումները, դաշբորդները և Excel լուծումները՝ Հրաչյա Ասլանյան · H/R Studios</p>{g}
 <div class="wfoot"><span class="tag">Շուտով՝ դասեր 1–6-ի լուծումները</span><a class="btn gh" href="works.html">Բոլորը մեկ էջում →</a></div></div>'''
 
@@ -178,20 +178,21 @@ JS2 = r'''<script>
 })();
 </script>'''
 
-INTRO2 = '''<div class="intro" id="intro"><video id="ivid" muted playsinline preload="auto" poster="assets/intro_end.jpg"><source src="assets/intro.mp4" type="video/mp4"></video>
-<div class="ct"><div class="pr"><i id="ipr"></i></div><div class="ild" id="ild">Բեռնվում է…</div></div><button class="btn iplay" id="iplay" hidden>▶ Դիտել ինտրոն</button>
-<button class="btn gh snd" id="isnd" aria-label="Ձայն">🔇 Ձայն</button><button class="btn gh sk" id="iskip">Բաց թողնել →</button></div>
-<script>(function(){const I=document.getElementById('intro'),V=document.getElementById('ivid'),bar=document.getElementById('ipr'),L=document.getElementById('ild'),P=document.getElementById('iplay');
-let seen=false;try{seen=sessionStorage.getItem('hr-intro3')==='1'}catch(e){}if(/[?&]intro=1/.test(location.search))seen=false;if(seen){I.remove();return}
-document.documentElement.style.overflow='hidden';let done=false,started=false;
-const fin=()=>{if(done)return;done=true;try{sessionStorage.setItem('hr-intro3','1')}catch(e){}I.classList.add('bye');document.documentElement.style.overflow='';setTimeout(()=>{try{V.pause()}catch(e){}I.remove()},950)};
-V.addEventListener('progress',()=>{try{if(!started&&V.buffered.length&&V.duration)bar.style.width=Math.min(100,V.buffered.end(V.buffered.length-1)/V.duration*100)+'%'}catch(e){}});
-V.addEventListener('timeupdate',()=>{if(V.duration){started=true;L.textContent='';bar.style.width=(V.currentTime/V.duration*100)+'%'}});
-V.addEventListener('ended',()=>setTimeout(fin,400));V.addEventListener('error',()=>setTimeout(fin,1500));
-const go=()=>{const p=V.play();if(p&&p.catch)p.catch(()=>{P.hidden=false;L.textContent=''})};
-if(V.readyState>=3)go();else V.addEventListener('canplay',go,{once:true});V.load();
-P.onclick=()=>{P.hidden=true;V.play().catch(fin)};setTimeout(()=>{if(!started)fin()},15000);setTimeout(fin,25000);
-document.getElementById('iskip').onclick=fin;const S=document.getElementById('isnd');S.onclick=()=>{V.muted=!V.muted;S.textContent=V.muted?'🔇 Ձայն':'🔊 Ձայն';if(!started)go()};})();</script>'''
+INTRO2 = '''<div class="intro" id="intro"><video id="ivid" muted playsinline autoplay preload="auto" poster="assets/intro_end.jpg"><source src="assets/intro.mp4" type="video/mp4"></video>
+<div class="ct"><div class="pr"><i id="ipr"></i></div><div class="ild" id="ild">Բեռնվում է… 0%</div></div></div>
+<script>(function(){const I=document.getElementById('intro'),V=document.getElementById('ivid'),bar=document.getElementById('ipr'),L=document.getElementById('ild');
+let seen=false;try{seen=sessionStorage.getItem('hr-intro4')==='1'}catch(e){}if(/[?&]intro=1/.test(location.search))seen=false;if(seen){I.remove();return}
+document.documentElement.style.overflow='hidden';let done=false,started=false,pct=0;
+const fin=()=>{if(done)return;done=true;try{sessionStorage.setItem('hr-intro4','1')}catch(e){}bar.style.width='100%';I.classList.add('bye');document.documentElement.style.overflow='';setTimeout(()=>{try{V.pause()}catch(e){}I.remove()},950)};
+const setP=p=>{p=Math.max(pct,Math.min(100,Math.round(p)));pct=p;if(!started){bar.style.width=p+'%';L.textContent='Բեռնվում է… '+p+'%'}};
+V.addEventListener('progress',()=>{try{if(V.buffered.length&&V.duration)setP(V.buffered.end(V.buffered.length-1)/V.duration*100)}catch(e){}});
+const fake=setInterval(()=>{if(!started&&pct<90)setP(pct+3)},120);
+V.addEventListener('playing',()=>{started=true;clearInterval(fake);L.textContent='';L.style.opacity=0});
+V.addEventListener('timeupdate',()=>{if(started&&V.duration)bar.style.width=(V.currentTime/V.duration*100)+'%'});
+V.addEventListener('ended',()=>setTimeout(fin,300));V.addEventListener('error',()=>{setP(100);setTimeout(fin,900)});
+const go=()=>{const p=V.play();if(p&&p.catch)p.catch(()=>{clearInterval(fake);setP(100);setTimeout(fin,1600)})};
+if(V.readyState>=3)go();else V.addEventListener('canplay',go,{once:true});
+setTimeout(()=>{if(!started){setP(100);setTimeout(fin,500)}},9000);setTimeout(fin,25000);})();</script>'''
 
 def words(t, cls='', k0=0):
     return ' '.join(f'<span class="w {cls}" style="--k:{i+k0}">{E(x)}</span>' for i, x in enumerate(t.split()))
@@ -237,7 +238,7 @@ def build_index():
     open(os.path.join(SITE, 'index.html'), 'w').write(gen.head(f'{COURSE} · H/R Studios', 'Ուսումնական հարթակ ԻՏ-447 խմբի համար', INTRO2) + body)
 
 def works_cards():
-    return ''.join(f'''<div class="wk rv"><div class="im" style="background-image:url('assets/gen/{w["img"]}.jpg')"><b>{w["l"]}</b></div><div class="ct"><h3>{E(w["t"])}</h3><div class="its">{"".join(f'<a class="it" href="{u}"{" download" if u.endswith(".xlsx") else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span><span class="ar">→</span></a>' for ic,n,u,s in w["items"])}<a class="it" href="{w["page"]}"><span class="ic">📘</span><span><b>{"Դասի էջը" if w["page"].startswith("lesson") else "Առաջադրանքը գրադարանում"}</b><small>{"բացատրություն, բանաձևեր, սլայդներ" if w["page"].startswith("lesson") else "դասախոսի ֆայլերը"}</small></span><span class="ar">→</span></a></div></div></div>''' for w in WORKS)
+    return ''.join(f'''<div class="wk rv"><div class="im" style="background-image:url('assets/gen/{w["img"]}.jpg')"><b>{w["l"]}</b></div><div class="ct"><h3>{E(w["t"])}</h3><div class="its">{"".join(f'<a class="it" href="{u}"{" download" if u.endswith((".xlsx",".pdf")) else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span><span class="ar">→</span></a>' for ic,n,u,s in w["items"])}<a class="it" href="{w["page"]}"><span class="ic">📘</span><span><b>{"Դասի էջը" if w["page"].startswith("lesson") else "Առաջադրանքը գրադարանում"}</b><small>{"բացատրություն, բանաձևեր, սլայդներ" if w["page"].startswith("lesson") else "դասախոսի ֆայլերը"}</small></span><span class="ar">→</span></a></div></div></div>''' for w in WORKS)
 
 def build_works():
     body = f'''{header('')}
