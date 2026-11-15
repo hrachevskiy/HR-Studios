@@ -217,16 +217,13 @@ def build_index():
 <div class="wrap"><div><div class="kick rv">H/R Studios · ԻՏ-447 · 2026–2027</div>
 <h1>{words("Տնտեսական գործունեության վերլուծություն")}<br>{words("բոլոր դասերը մեկ տեղում", "gr", 3)}</h1>
 <p class="lead rv">Դասախոսի սլայդները և ֆայլերը՝ պարզ ու գեղեցիկ տեսքով, յուրաքանչյուր թեմայի բացատրությունը պարզ լեզվով, լուծված տնայինները, Excel ֆայլերը և անիմացիոն ներկայացումները։</p>
-<div class="ctas rv"><a class="btn" href="#lessons">{ICON["play"]}Դիտել դասերը</a><a class="btn gh" href="#works">🎬 Իմ աշխատանքները</a><a class="btn gh" href="#library">{ICON["grid"]}Գրադարան</a></div>
+<div class="ctas rv"><a class="btn" href="#lessons">{ICON["play"]}Դիտել դասերը</a><a class="btn gh" href="works.html">🎬 Իմ աշխատանքները</a><a class="btn gh" href="#library">{ICON["grid"]}Գրադարան</a></div>
 <div class="author rv"><span class="av">ՀԱ</span><div><b>Հրաչյա Ասլանյան</b><small>Հեղինակ · ՀԱՊՀ, ԻՏ-447 · Դասախոս՝ {E(TEACHER)}</small></div></div></div>
 <a class="hcard rv" href="t8/index.html"><img src="assets/gen/desk.jpg" alt=""><div class="cap"><div><b>Նոր՝ Դաս 8 ներկայացում</b><small>Դեբիտորական և կրեդիտորական պարտքեր</small></div><span class="btn" style="padding:9px 14px">{ICON["play"]}</span></div></a></div></section>
 <div class="marq"><div class="tr">{marq}</div></div>
 <div class="wrap"><div class="stats" style="margin-top:30px"><div class="stat rv"><b data-n="{len(LESSONS)}">0</b><span>դաս</span></div><div class="stat rv"><b data-n="{nfiles}">0</b><span>դասախոսի ֆայլ</span></div><div class="stat rv"><b data-n="{nsl}">0</b><span>սլայդ դիտելու համար</span></div><div class="stat rv"><b data-n="{sum(1 for L in LESSONS if L["hw"])}">0</b><span>լուծված տնային + ներկայացում</span></div></div></div>
 <section class="sec sbg" id="lessons"><div class="bimg" style="background-image:url('assets/gen/lecture.jpg')"></div><div class="wrap"><div class="kick rv">Դասընթաց</div><h2 class="rv">Դասեր</h2><p class="sd rv">Ընտրեք դասը․ ներսում կգտնեք պարզ բացատրություն, բանաձևերի քարտեր, դասախոսի սլայդները, ֆայլերը և տնային աշխատանքի լուծումը։</p>
 <div class="lgrid">{cards}</div></div></section>
-<section class="sec" id="works"><div class="wrap"><div class="feature"><div><div class="kick rv">H/R Studios</div><h2 class="rv">Իմ աշխատանքները</h2><p class="sd rv">Յուրաքանչյուր տնային աշխատանք՝ երեք ձևաչափով․ անիմացիոն ներկայացում, ինտերակտիվ «Տվյալների սրահ» և Excel ֆայլ՝ բանաձևերով և գծապատկերներով։</p>
-<div class="bul rv"><div>Սեղմեք ցանկացած թվի վրա՝ կտեսնեք Excel-ի բանաձևը</div><div>Աշխատում է համակարգչում և հեռախոսում</div><div>Excel-ը կարելի է ներբեռնել հենց ներկայացման միջից</div></div></div>
-<div class="pic rv"><img src="assets/gen/works.jpg" alt=""></div></div><div class="wkgrid" style="margin-top:30px">{wk}</div></div></section>
 <section class="sec sbg" id="how"><div class="bimg" style="background-image:url('assets/gen/students.jpg')"></div><div class="wrap"><div class="kick rv">Ինչպես օգտվել</div><h2 class="rv">Երեք քայլ</h2>
 <div class="grid g3 how"><div class="card rv"><div class="ic">📖</div><h3>1 · Կարդացեք պարզ տարբերակը</h3><p>Յուրաքանչյուր դասում կա «Դասը պարզ լեզվով» բաժինը՝ օրինակով, բանաձևերի բացատրությամբ և բառարանով։</p></div>
 <div class="card rv"><div class="ic">📊</div><h3>2 · Նայեք լուծված օրինակը</h3><p>Բացեք ներկայացումը և «Տվյալների սրահը»․ սեղմեք ցանկացած թվի վրա և կտեսնեք՝ ինչ բանաձևով է հաշվված։</p></div>
