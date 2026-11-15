@@ -1,0 +1,1 @@
+Build order: python3 hw/hwpage2.py && python3 gen/gen2.py && python3 gen/extras.py && python3 gen/retint.py

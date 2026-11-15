@@ -143,7 +143,7 @@ def header(active, root=''):
     items = [('index.html#top', 'Գլխավոր', 'home'), ('index.html#lessons', 'Դասեր', 'lessons'), ('index.html#library', 'Նյութեր', 'library'), ('index.html#how', 'Ինչպես օգտվել', 'how'), ('index.html#about', 'Մեր մասին', 'about')]
     nav = ''.join(f'<a href="{root}{h}" class="{"on" if k==active else ""}">{t}</a>' for h, t, k in items)
     return f'''<div class="prog" id="prog"></div><div class="cglow" id="cglow"></div><header class="hdr"><div class="wrap in"><a class="logo" href="{root}index.html"><img class="lim" src="assets/logo_sm.png" alt="H/R Studios"><span class="wd">H/R Studios<small>ՈՒՍՈՒՄՆԱԿԱՆ ՀԱՐԹԱԿ</small></span></a>
-<button class="works-btn" id="wbtn" aria-expanded="false"><span class="dot"></span><span class="t">Լուծված առաջադրանքներ</span><span>▾</span></button>
+<button class="works-btn" id="wbtn" aria-expanded="false"><span class="dot"></span><span class="t">Լուծումներ</span><span>▾</span></button>
 <nav class="nav" id="nav">{nav}</nav><button class="burger" aria-label="Մենյու" onclick="document.getElementById('nav').classList.toggle('open')">☰</button></div></header>{wpanel()}'''
 
 def footer():
