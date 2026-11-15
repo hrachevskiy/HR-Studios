@@ -137,17 +137,38 @@ const s=document.getElementById('srch2');s&&s.addEventListener('input',()=>{cons
 def wpanel():
     g = ''.join(f'''<div class="wgrp"><div class="ph" style="background-image:url('assets/gen/{w["img"]}_s.jpg')"><b>{w["l"]}</b></div><div><h4>{E(w["t"])}</h4>{"".join(f'<a class="witem" href="{u}"{" download" if u.endswith((".xlsx",".pdf")) else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span></a>' for ic,n,u,s in w["items"])}</div></div>''' for w in WORKS)
     return f'''<div class="wpanel" id="wpanel" role="dialog" aria-label="Լուծված առաջադրանքներ"><h3>Լուծված առաջադրանքներ</h3><p class="sd2">Բոլոր ներկայացումները, դաշբորդները և Excel լուծումները՝ Հրաչյա Ասլանյան · H/R Studios</p>{g}
-<div class="wfoot"><span class="tag">Շուտով՝ դասեր 1–6-ի լուծումները</span><a class="btn gh" href="works.html">Բոլորը մեկ էջում →</a></div></div>'''
+<div class="wfoot"><span class="tag">Բոլոր լուծված առաջադրանքները</span><a class="btn gh" href="works.html">Բոլորը մեկ էջում →</a></div></div>'''
 
 def header(active, root=''):
-    items = [('index.html#top', 'Գլխավոր', 'home'), ('index.html#lessons', 'Դասեր', 'lessons'), ('index.html#library', 'Նյութեր', 'library'), ('index.html#how', 'Ինչպես օգտվել', 'how'), ('index.html#about', 'Մեր մասին', 'about')]
+    items = [('index.html#top', 'Գլխավոր', 'home'), ('index.html#lessons', 'Դասեր', 'lessons'), ('index.html#library', 'Նյութեր', 'library'), ('index.html#how', 'Ինչպես օգտվել', 'how'), ('index.html#contacts', 'Կապ', 'about')]
     nav = ''.join(f'<a href="{root}{h}" class="{"on" if k==active else ""}">{t}</a>' for h, t, k in items)
     return f'''<div class="prog" id="prog"></div><div class="cglow" id="cglow"></div><header class="hdr"><div class="wrap in"><a class="logo" href="{root}index.html"><img class="lim" src="assets/logo_sm.png" alt="H/R Studios"><span class="wd">H/R Studios<small>ՈՒՍՈՒՄՆԱԿԱՆ ՀԱՐԹԱԿ</small></span></a>
 <button class="works-btn" id="wbtn" aria-expanded="false"><span class="dot"></span><span class="t">Լուծումներ</span><span>▾</span></button>
 <nav class="nav" id="nav">{nav}</nav><button class="burger" aria-label="Մենյու" onclick="document.getElementById('nav').classList.toggle('open')">☰</button></div></header>{wpanel()}'''
 
+TG = "https://t.me/hrachevskiy"; ARMFA = "https://www.armfa.am/people/42"
+CONTACTS = f'''<section class="sec" id="contacts"><div class="wrap"><div class="kick rv">Կապ</div><h2 class="rv">Ում դիմել հարցերի դեպքում</h2>
+<p class="sd rv">Դասի բովանդակության, տնայինների և գնահատման հարցերով՝ դասախոսին։ Կայքի աշխատանքի, սխալների կամ առաջարկների դեպքում՝ կայքի հեղինակին։</p>
+<div class="ccards">
+<div class="ccard rv"><div class="cav">ՕԳ</div><div class="cbody"><span class="crole">Դասախոս</span><h3>Օլյա Գալստյան</h3>
+<p>Տնտեսագիտական գիտությունների թեկնածու, դոցենտ։ Դասավանդում է Հայաստանի ազգային պոլիտեխնիկական համալսարանում (ՀԱՊՀ)։ Հայաստանի ֆինանսիստների ասոցիացիայի (ՀՖԱ) գիտակրթական հանձնաժողովի ղեկավար։</p>
+<div class="clinks"><a href="{ARMFA}" target="_blank" rel="noopener">👤 Պրոֆիլը armfa.am կայքում ↗</a><a href="mailto:armfinass@gmail.com">✉ armfinass@gmail.com <small>(ՀՖԱ)</small></a><a href="tel:+37455388328">☎ +374 55 388 328 <small>(ՀՖԱ)</small></a></div></div></div>
+<div class="ccard rv"><div class="cav me">ՀԱ</div><div class="cbody"><span class="crole">Կայքի հեղինակ</span><h3>Հրաչյա Ասլանյան</h3>
+<p>ՀԱՊՀ, ԻՏ-447 խմբի ուսանող, H/R Studios-ի հիմնադիր։ Ստեղծում եմ անիմացիոն ներկայացումներ, դաշբորդներ և ուսումնական կայքեր։ Այս հարթակը պատրաստել եմ, որպեսզի առարկայի բոլոր նյութերը լինեն պարզ և հասանելի բոլորի համար։</p>
+<div class="clinks"><a class="tgb" href="{TG}" target="_blank" rel="noopener">✈ Telegram՝ @hrachevskiy</a></div></div></div>
+</div></div></section>'''
+CSS_CONTACTS = """.ccards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.ccard{display:flex;gap:18px;padding:24px;border-radius:22px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.cav{flex:none;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-weight:800;font-size:18px;color:#03140a;background:linear-gradient(145deg,var(--g),var(--c));box-shadow:0 0 26px rgba(61,255,143,.3)}.cav.me{background:linear-gradient(145deg,var(--c),var(--v))}
+.cbody{min-width:0}.crole{font:600 11px var(--num);letter-spacing:.16em;text-transform:uppercase;color:var(--g)}.ccard h3{margin:4px 0 8px;font-size:21px}.ccard p{margin:0 0 14px;color:var(--sub);font-size:14.5px}
+.clinks{display:flex;flex-wrap:wrap;gap:8px}.clinks a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass2);text-decoration:none;font-size:13.5px;font-weight:600;color:var(--tx);overflow-wrap:anywhere}.clinks a:hover{border-color:var(--g);color:var(--g)}.clinks small{color:var(--dim);font-weight:500}
+.clinks a.tgb{background:linear-gradient(135deg,#2aabee,#229ed9);border-color:transparent;color:#fff}.clinks a.tgb:hover{color:#fff;filter:brightness(1.1)}
+.ftr .in{grid-template-columns:1.4fr 1fr 1fr 1fr}
+@media (max-width:860px){.ccards{grid-template-columns:1fr}.ccard{flex-direction:column;gap:12px}.ftr .in{grid-template-columns:1fr}}"""
 def footer():
     f = gen.footer_orig()
+    f = f.replace('</div><div class="copy">', f'<div><h4>Կապ</h4><a href="{ARMFA}" target="_blank" rel="noopener">Դասախոս՝ Օլյա Գալստյան ↗</a><a href="mailto:armfinass@gmail.com">armfinass@gmail.com (ՀՖԱ)</a><a href="{TG}" target="_blank" rel="noopener">Կայքի հեղինակ՝ @hrachevskiy</a></div></div><div class="copy">', 1)
+    f = CONTACTS + f
     f = f.replace('<footer class="ftr" id="about"><div class="wrap">', '<footer class="ftr" id="about"><div class="fbg" style="background-image:url(\'assets/gen/studio.jpg\')"></div><div class="wrap">')
     f = f.replace('<span class="mk"><b>H/R</b></span>', '<img class="lim" src="assets/logo_sm.png" alt="H/R Studios" style="height:44px">')
     return f
@@ -221,7 +242,7 @@ def build_index():
 <div class="author rv"><span class="av">ՀԱ</span><div><b>Հրաչյա Ասլանյան</b><small>Հեղինակ · ՀԱՊՀ, ԻՏ-447 · Դասախոս՝ {E(TEACHER)}</small></div></div></div>
 <a class="hcard rv" href="t8/index.html"><img src="assets/gen/desk.jpg" alt=""><div class="cap"><div><b>Նոր՝ Դաս 8 ներկայացում</b><small>Դեբիտորական և կրեդիտորական պարտքեր</small></div><span class="btn" style="padding:9px 14px">{ICON["play"]}</span></div></a></div></section>
 <div class="marq"><div class="tr">{marq}</div></div>
-<div class="wrap"><div class="stats" style="margin-top:30px"><div class="stat rv"><b data-n="{len(LESSONS)}">0</b><span>դաս</span></div><div class="stat rv"><b data-n="{nfiles}">0</b><span>դասախոսի ֆայլ</span></div><div class="stat rv"><b data-n="{nsl}">0</b><span>սլայդ դիտելու համար</span></div><div class="stat rv"><b data-n="{sum(1 for L in LESSONS if L["hw"])}">0</b><span>լուծված տնային + ներկայացում</span></div></div></div>
+<div class="wrap"><div class="stats" style="margin-top:30px"><div class="stat rv"><b data-n="{len(LESSONS)}">0</b><span>դաս</span></div><div class="stat rv"><b data-n="{nfiles}">0</b><span>դասախոսի ֆայլ</span></div><div class="stat rv"><b data-n="{nsl}">0</b><span>սլայդ դիտելու համար</span></div><div class="stat rv"><b data-n="{sum(1 for L in LESSONS if L["hw"]) + 1}">0</b><span>լուծված առաջադրանք (միջանկյալը ներառյալ)</span></div></div></div>
 <section class="sec sbg" id="lessons"><div class="bimg" style="background-image:url('assets/gen/lecture.jpg')"></div><div class="wrap"><div class="kick rv">Դասընթաց</div><h2 class="rv">Դասեր</h2><p class="sd rv">Ընտրեք դասը․ ներսում կգտնեք պարզ բացատրություն, բանաձևերի քարտեր, դասախոսի սլայդները, ֆայլերը և տնային աշխատանքի լուծումը։</p>
 <div class="lgrid">{cards}</div></div></section>
 <section class="sec sbg" id="how"><div class="bimg" style="background-image:url('assets/gen/students.jpg')"></div><div class="wrap"><div class="kick rv">Ինչպես օգտվել</div><h2 class="rv">Երեք քայլ</h2>
@@ -230,7 +251,7 @@ def build_index():
 <div class="card rv"><div class="ic">✍️</div><h3>3 · Կատարեք ինքնուրույն</h3><p>Ներբեռնեք դասախոսի Excel ձևանմուշը և հետևեք «Ինչպես կատարել» քայլերին։ Ամեն ինչ կարող եք ստուգել լուծված ֆայլով։</p></div></div></div></section>
 <section class="sec" id="library"><div class="wrap"><div class="feature" style="margin-bottom:30px"><div class="pic rv"><img src="assets/gen/papers.jpg" alt=""></div><div><div class="kick rv">Գրադարան</div><h2 class="rv">Դասախոսի բոլոր նյութերը</h2><p class="sd rv">Ընտրեք դասը․ յուրաքանչյուր դասի համար կա դասախոսի բնօրինակը և մեր «✨ H/R տարբերակը»՝ գեղեցիկ ներկայացում և կոնսպեկտ։</p></div></div>
 <input class="srch" id="srch2" placeholder="Որոնում բոլոր դասերում՝ օրինակ «իրացվելիություն»" style="width:100%;margin-bottom:14px">{library_tabs()}</div></section>
-<section class="sec" id="midterm"><div class="wrap"><div class="feature"><div><div class="kick rv">Քննություն</div><h2 class="rv">1-ին միջանկյալ ստուգում</h2><p class="sd rv">Տնային առաջադրանքը (5 խնդիր) և տեսական հարցաշարը։</p><div class="files">{mid}</div></div><div class="pic rv"><img src="assets/gen/midterm.jpg" alt=""></div></div></div></section>
+<section class="sec" id="midterm"><div class="wrap"><div class="feature"><div><div class="kick rv">Քննություն</div><h2 class="rv">1-ին միջանկյալ ստուգում</h2><p class="sd rv">Տնային առաջադրանքը (5 խնդիր) և տեսական հարցաշարը։</p><div class="kick" style="margin:6px 0 10px">✨ Լուծված առաջադրանք</div><div class="clinks rv" style="margin-bottom:22px"><a href="hw/mijankyal/index.html">📊 Դաշբորդ + PDF դիտիչ</a><a href="files/Mijankyal_Hrachya_Aslanyan_N5.pdf" download>📄 PDF հաշվետվություն</a><a href="files/Mijankyal_Hrachya_Aslanyan_N5.xlsx" download>📗 Excel լուծում</a></div><div class="kick" style="margin:0 0 10px">Դասախոսի բնօրինակները</div><div class="files">{mid}</div></div><div class="pic rv"><img src="assets/gen/midterm.jpg" alt=""></div></div></div></section>
 {footer()}{gen.JS}{LIBJS}</body></html>'''
     open(os.path.join(SITE, 'index.html'), 'w').write(gen.head(f'{COURSE} · H/R Studios', 'Ուսումնական հարթակ ԻՏ-447 խմբի համար', INTRO2) + body)
 
@@ -246,7 +267,7 @@ def build_works():
     open(os.path.join(SITE, 'works.html'), 'w').write(gen.head('Լուծված առաջադրանքներ · H/R Studios', 'Հրաչյա Ասլանյանի աշխատանքները') + body)
 
 if __name__ == '__main__':
-    gen.CSS += CSS2
+    gen.CSS += CSS2 + CSS_CONTACTS
     gen.file_card_orig = gen.file_card; gen.file_card = file_card2
     gen.footer_orig = gen.footer
     gen.header = header; gen.footer = footer
