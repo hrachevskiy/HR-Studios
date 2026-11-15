@@ -378,7 +378,7 @@ def build_mij():
     sh = "".join(f'<div class="sh g rv" style="--i:{i}" data-tilt><b>{E(a)}</b><h3>{E(b)}</h3><p>{E(c_)}</p></div>' for i, (a, b, c_) in enumerate(sheets))
     k = kpis([("0.423", "Բացարձակ իրացվելիություն"), ("1.683", "Ընթացիկ իրացվելիություն"), ("0.429", "Ֆին. անկախություն"), ("1.333", "Ֆին. ռիսկ"),
               ("333.3%", "ՇԲԹՀՄ"), ("2.000", "Նյութատարություն"), ("449,314", "Աշխ. ժամանակի ֆոնդ, ժ"), ("+9.16%", "ՏԱ-ի աճ")], "kp g")
-    body = topbar("Mijankyal_Hrachya_Aslanyan_N5.xlsx", "works.html", "Աշխատանքներ") + f"""
+    body = topbar("Mijankyal_Hrachya_Aslanyan_N5.xlsx", "works.html", "Լուծումներ") + f"""
 <div class="cur"><i class="bl a"></i><i class="bl b"></i><div class="gx"><small>1-ԻՆ ՄԻՋԱՆԿՅԱԼ · ՄԱՏՅԱՆ</small><b>n = 5</b><small>ՀՐԱՉՅԱ ԱՍԼԱՆՅԱՆ · IT447</small></div></div>
 <section class="hero">{hero_slides("mij", [6, 12, 9, 3, 0])}<div class="inner wrap"><div><span class="pill fade-up">✓ ՀԱՆՁՆՎԱԾ Է ԴԱՍԱԽՈՍԻՆ · 1-ԻՆ ՄԻՋԱՆԿՅԱԼ</span>
 <h1 class="tl">{words("Տնտեսական գործունեության")} <span class="gr">{words("վերլուծություն", 2)}</span></h1>
@@ -406,3 +406,94 @@ if __name__ == "__main__":
         open(os.path.join(d, "index.html"), "w", encoding="utf8").write(fn()); print("wrote", slug)
     old = os.path.join(SITE, "hw", "midterm-1")
     if os.path.isdir(old): shutil.rmtree(old); print("removed midterm-1")
+
+# ================= 6) ART DECO — lesson 8 (receivables & payables) =================
+CSS_DECO = r"""
+html,body{overflow-x:clip}
+body{background:#0a1626;color:#efe6cf;font-family:'Noto Serif Armenian',Georgia,serif}
+body::before{content:"";position:fixed;inset:0;z-index:-1;opacity:.07;background:url('../../assets/hw/deco/04.jpg') center/cover}
+.topbar{background:rgba(10,22,38,.88);border-bottom:1px solid rgba(212,175,55,.45);backdrop-filter:blur(10px);font-family:'Noto Sans Armenian'}.topbar a.b{border:1px solid rgba(212,175,55,.6);color:#e9cf7a}.topbar a.x{background:linear-gradient(180deg,#f1d98a,#c79a2c);color:#1a1205;border-color:#c79a2c}
+.gold{background:linear-gradient(180deg,#fbe9a6 0%,#d4af37 45%,#a37a17 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cur{background:#0a1626}.cur .rays{position:absolute;width:160vmax;height:160vmax;background:repeating-conic-gradient(from 0deg,rgba(212,175,55,.22) 0 4deg,transparent 4deg 12deg);border-radius:50%;animation:rays 2s cubic-bezier(.2,.8,.2,1) both;mask-image:radial-gradient(circle,#000 10%,transparent 60%);-webkit-mask-image:radial-gradient(circle,#000 10%,transparent 60%)}
+@keyframes rays{from{transform:scale(.1) rotate(-60deg);opacity:0}}
+.cur .door{position:absolute;top:0;bottom:0;width:50%;background:#0a1626 repeating-linear-gradient(90deg,transparent 0 38px,rgba(212,175,55,.18) 38px 40px);z-index:3;transition:transform 1.1s cubic-bezier(.7,0,.2,1)}
+.cur .door.l{left:0;border-right:2px solid #d4af37}.cur .door.r{right:0;border-left:2px solid #d4af37}
+body.ready .cur .door.l{transform:translateX(-101%)}body.ready .cur .door.r{transform:translateX(101%)}body.ready .cur{opacity:1;visibility:hidden;background:transparent;transition:visibility 0s 1.25s,background .3s}body.ready .cur .rays{opacity:0;transition:opacity .4s}
+.cur .emb{position:relative;z-index:4;text-align:center;padding:34px 50px;border:2px solid #d4af37;outline:1px solid rgba(212,175,55,.5);outline-offset:8px;background:#0a1626;animation:emb .9s cubic-bezier(.2,.8,.2,1) .2s both}
+.cur .emb small{display:block;font:600 12px 'Noto Sans Armenian';letter-spacing:.5em;color:#d4af37}.cur .emb b{display:block;font:400 clamp(70px,12vw,130px)/1 'Poiret One','Noto Serif Armenian';margin:8px 0}
+@keyframes emb{from{transform:scale(.6);opacity:0}}body.ready .cur .emb{opacity:0;transition:opacity .4s}
+.hero{min-height:100vh;align-items:center;justify-content:center;text-align:center}.hero .hs img{filter:brightness(.42) saturate(.9) sepia(.15)}
+.hero::after{content:"";position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse at center,transparent 30%,rgba(10,22,38,.9) 85%),linear-gradient(180deg,transparent 60%,#0a1626)}
+.hero .inner{padding:90px 20px 60px}.frame{position:relative;display:inline-block;padding:44px clamp(24px,5vw,70px);border:1px solid rgba(212,175,55,.75);outline:1px solid rgba(212,175,55,.35);outline-offset:10px;background:rgba(10,22,38,.45);backdrop-filter:blur(6px)}
+.frame::before,.frame::after{content:"";position:absolute;width:46px;height:46px;border:2px solid #d4af37}.frame::before{top:-12px;left:-12px;border-right:0;border-bottom:0}.frame::after{bottom:-12px;right:-12px;border-left:0;border-top:0}
+.kick8{font:600 12.5px 'Noto Sans Armenian';letter-spacing:.45em;color:#d4af37;text-transform:uppercase}
+.hero h1{font-weight:600;font-size:clamp(34px,5.6vw,78px);line-height:1.04;margin:16px 0;letter-spacing:.02em;text-transform:uppercase}
+.hero p{max-width:640px;margin:0 auto;color:#d9ccb0;font-size:17px;line-height:1.7}.fan{display:block;width:120px;margin:0 auto 6px}
+.meds{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:-30px auto 40px;position:relative;z-index:4;max-width:1100px}
+.med{text-align:center;padding:26px 12px;border:1px solid rgba(212,175,55,.6);background:linear-gradient(180deg,#0f2038,#0a1626);clip-path:polygon(12% 0,88% 0,100% 12%,100% 88%,88% 100%,12% 100%,0 88%,0 12%)}
+.med b{display:block;font:400 clamp(30px,3.6vw,46px)/1 'Poiret One','Noto Serif Armenian'}.med span{display:block;margin-top:8px;font:500 12.5px 'Noto Sans Armenian';color:#cdbf9c;letter-spacing:.05em}
+.dv{display:flex;align-items:center;gap:16px;margin:70px auto 26px;max-width:1100px;padding:0 20px}.dv::before,.dv::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent)}
+.dv svg{width:60px;flex:none}
+section.s8{max-width:1180px;margin:0 auto;padding:0 20px}.s8 h2{text-align:center;font-weight:600;font-size:clamp(26px,3.4vw,42px);letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px}
+.s8 .sub8{text-align:center;color:#cdbf9c;max-width:720px;margin:0 auto 26px;font-size:16px;line-height:1.7}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:24px}.pn8{padding:22px;border:1px solid rgba(212,175,55,.35);background:rgba(15,32,56,.55)}
+table{font-family:'Noto Sans Armenian';color:#efe6cf}thead th{color:#d4af37;font-weight:600;font-size:12px;letter-spacing:.08em;border-top:1px solid #d4af37;border-bottom:1px solid #d4af37;text-transform:uppercase}
+tbody tr{border-bottom:1px solid rgba(212,175,55,.15)}tbody tr:hover{background:rgba(212,175,55,.06)}code{color:#e9cf7a}.vd.ok{color:#9fd8a0}.vd.no{color:#f19a8b}
+.ch .s1{fill:#5a6b85}.ch .s2,.ch .tot{fill:#d4af37}.ch .pos{fill:#9fd8a0}.ch .neg{fill:#e07a6a}.ch .ax,.ch .cn{stroke:#d4af37}.ch text{fill:#efe6cf;font-family:'Noto Sans Armenian'}
+.gt{background:rgba(212,175,55,.15)}.gt .zone{background:rgba(159,216,160,.45)}.gt .mk{background:#f1d98a}
+.cnc{max-width:900px;margin:24px auto 0;padding:24px 28px;border-left:3px solid #d4af37;background:rgba(15,32,56,.6);line-height:1.8;font-size:16.5px;color:#e6dcc4}
+.chap{color:#efe6cf}.chap .chi{filter:brightness(.45) sepia(.2)}.chap .chn{font-family:'Poiret One','Noto Serif Armenian'}.chap h2{text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.mq{border-top:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);background:#081221}.mqt img{border-radius:0;border:1px solid rgba(212,175,55,.5)}
+.gi{border-radius:0;border:1px solid rgba(212,175,55,.45)}.gal h2{text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.foot{text-align:center;padding:40px 0 70px;color:#a8996f;font:500 12.5px 'Noto Sans Armenian';letter-spacing:.3em;text-transform:uppercase}
+@media (max-width:900px){.meds{grid-template-columns:1fr 1fr;margin-top:20px}.g2{grid-template-columns:1fr}}
+"""
+FAN = '<svg class="fan" viewBox="0 0 120 50" fill="none" stroke="#d4af37" stroke-width="1.2"><path d="M60 48 L10 8 M60 48 L30 3 M60 48 L60 1 M60 48 L90 3 M60 48 L110 8"/><path d="M14 30 Q60 -6 106 30"/><path d="M28 38 Q60 14 92 38"/><circle cx="60" cy="48" r="2" fill="#d4af37"/></svg>'
+def dv(): return f'<div class="dv">{FAN.replace("class=\"fan\"", "")}</div>'
+def build_hw8():
+    wb = openpyxl.load_workbook(os.path.join(SITE, "files", "Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx"), data_only=True); a, b = wb.worksheets[0], wb.worksheets[1]
+    g = lambda ws, r, c: ws.cell(r, c).value
+    deb = [[E(g(a, r, 2)), n(g(a, r, 3)), n(g(a, r, 4), 1) + "%", n(g(a, r, 5)), n(g(a, r, 6), 1) + "%"] for r in range(44, 51)]
+    deb.append(["<b>Ընդամենը</b>", f"<b>{n(g(a, 51, 3))}</b>", "100%", f"<b>{n(g(a, 51, 5))}</b>", "100%"])
+    pair = svg_pairs([f"Դ{i}" for i in range(1, 8)], [g(a, r, 3) for r in range(44, 51)], [g(a, r, 5) for r in range(44, 51)], "2024", "2025")
+    def rows(ws, rr, dec):
+        out = []
+        for r in rr:
+            nm = str(g(ws, r, 2) or "").split("\n")[0]; d = dec.get(r, 3)
+            out.append([E(nm), f"<code>{E(str(g(ws, r, 3) or '').strip())}</code>", n(g(ws, r, 4), d), n(g(ws, r, 5), d), n(g(ws, r, 6), d, True)])
+        return out
+    dr = table(["Ցուցանիշ", "Նշան", "2024", "2025", "Δ"], rows(a, range(33, 39), {33: 2, 34: 1}) + [["Հարաբերական ներգրավում", "<code>±ΔԴՄ</code>", "—", "—", n(g(a, 39, 6), 0, True)]])
+    mv = table(["Ցուցանիշ", "Բանաձև", "2024", "2025", "Δ"], [[E(g(a, r, 2)), f"<code>{E(g(a, r, 3))}</code>", n(g(a, r, 4), 1 if r in (59, 60) else 0), n(g(a, r, 5), 1 if r in (59, 60) else 0), n(g(a, r, 6), 1 if r in (59, 60) else 0, True)] for r in range(55, 62)])
+    wfm = svg_waterfall(("Սկիզբ 2025", g(a, 55, 5)), [("Ձևավորվել է", g(a, 56, 5)), ("Մարվել է", -g(a, 57, 5))], ("Վերջ 2025", g(a, 58, 5)), 0)
+    cr = table(["Ցուցանիշ", "Նշան", "2024", "2025", "Δ"], rows(b, range(33, 40), {33: 0, 34: 0, 35: 2, 36: 1, 37: 1, 38: 1, 39: 1}) + [["Դրամական միջոցների տնտեսում (+)/ներգրավում (−)", "<code>±ΔԴՄ</code>", "—", "—", n(g(b, 40, 6), 0, True)], ["Դեբիտորական ÷ կրեդիտորական", "<code>Գդկհ</code>", n(g(b, 41, 4), 3), n(g(b, 41, 5), 3), n(g(b, 41, 6), 3, True)]])
+    wff = svg_waterfall(("Գդկհ 2024", g(b, 66, 4)), [("ՏԿկպ", g(b, 67, 5)), ("ԳԸԻ", g(b, 68, 5)), ("ՏԿդպ", g(b, 69, 5))], ("Գդկհ 2025", g(b, 69, 4)), 3)
+    days = svg_pairs(["ԴՊ պտույտ, օր", "ԿՊ պտույտ, օր"], [g(a, 34, 4), g(b, 36, 4)], [g(a, 34, 5), g(b, 36, 5)], "2024", "2025", 1, 240)
+    gg = gauge("Գդկհ 2024", g(b, 41, 4), 0.9, 1.0, 2) + gauge("Գդկհ 2025", g(b, 41, 5), 0.9, 1.0, 2) + gauge("Ռիսկային ԴՊ կշիռ 2025", g(a, 37, 5), 0, .05, .2)
+    c1 = str(g(a, 64, 1)).split(". ", 1)[1] if g(a, 64, 1) else ""; c2 = str(g(b, 74, 1)).split(". ", 1)[1] if g(b, 74, 1) else ""
+    meds = "".join(f'<div class="med rv" style="--i:{i}"><b class="gold" data-count="{v}" data-d="{d}" data-pre="{p}">{t}</b><span>{E(l)}</span></div>' for i, (v, d, p, t, l) in enumerate([
+        (g(a, 34, 5), 1, "", n(g(a, 34, 5), 1), "օր՝ ԴՊ մեկ պտույտը"), (g(b, 36, 5), 1, "", n(g(b, 36, 5), 1), "օր՝ ԿՊ մեկ պտույտը"), (g(b, 41, 5), 3, "", n(g(b, 41, 5), 3), "Գդկհ 2025"), (round(g(a, 39, 6)), 0, "+", n(g(a, 39, 6), 0, True), "դրամ՝ ներգրավված ԴՄ")]))
+    body = topbar("Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx", "lesson-8.html", "Դաս 8") + f"""
+<div class="cur"><i class="rays"></i><i class="door l"></i><i class="door r"></i><div class="emb"><small>ԴԱՍ</small><b class="gold">VIII</b><small>ՀՐԱՉՅԱ ԱՍԼԱՆՅԱՆ</small></div></div>
+<section class="hero">{hero_slides("deco", [4, 0, 2, 3, 1])}<div class="inner"><div class="frame">{FAN}<div class="kick8 fade-up">Դասեր 8–9 · 14.11.2026 · Մասնավոր բանկի հաշվետվություն</div>
+<h1 class="tl gold">{words("Դեբիտորական և կրեդիտորական պարտքեր")}</h1><p class="fade-up">Ով է մեզ պարտք, ում ենք մենք պարտք, և որքան արագ են պարտքերը «պտտվում»։ Վերլուծությունը՝ հին բանկային մատյանի պես մանրակրկիտ։</p></div></div><span class="scue" style="color:#d4af37"></span></section>
+<div class="meds">{meds}</div>
+{dv()}<section class="s8" id="excel"><h2 class="gold rv">Մեր դեբիտորները</h2><p class="sub8 rv">Ով և որքան է պարտք ընկերությանը՝ ձևավորված պարտքերի կազմը և կառուցվածքը</p>
+<div class="g2"><div class="pn8 rv sl">{table(["Դեբիտոր", "2024", "%", "2025", "%"], deb)}</div><div class="pn8 rv sr">{pair}</div></div></section>
+{chapter("deco", 2, "I", "Դեբիտորական պարտքեր", "Որքան արագ են գնորդները վճարում")}
+<section class="s8"><h2 class="gold rv">Գործակիցներ</h2><div class="pn8 rv">{dr}</div>
+<div class="g2" style="margin-top:24px"><div class="pn8 rv sl"><h3 class="kick8" style="margin:0 0 12px">Պարտքերի շարժը 2025</h3>{wfm}</div><div class="pn8 rv sr">{mv}</div></div>
+<div class="cnc rv">{E(c1)}</div></section>
+{marquee("deco", range(15))}
+{chapter("deco", 3, "II", "Կրեդիտորական պարտքեր", "Որքան արագ ենք մենք վճարում")}
+<section class="s8"><h2 class="gold rv">Մեր պարտքերը</h2><div class="pn8 rv">{cr}</div>
+<div class="g2" style="margin-top:24px"><div class="pn8 rv sl"><h3 class="kick8" style="margin:0 0 12px">Պտույտի տևողություն</h3>{days}</div><div class="pn8 rv sr"><h3 class="kick8" style="margin:0 0 12px">Հավասարակշռություն</h3>{gg}</div></div></section>
+{dv()}<section class="s8"><h2 class="gold rv">Գդկհ-ի գործոնային վերլուծություն</h2><p class="sub8 rv">Շղթայական տեղադրում՝ Գդկհ = ՏԿդպ × ԳԸԻ ÷ ՏԿկպ</p><div class="pn8 rv sc">{wff}</div>
+<div class="cnc rv">{E(c2)}</div></section>
+{gallery("deco", range(15), "Արխիվ")}
+<div class="foot">H/R Studios · Հրաչյա Ասլանյան · ԻՏ-447 · Excel՝ 376 բանաձև · 0 սխալ</div>"""
+    return page("deco", "Դեբիտորական և կրեդիտորական պարտքեր", body, CSS_DECO, "Դաս 8 տնային աշխատանք", 2100, "#d4af37")
+H.FONTS["deco"] = "family=Noto+Serif+Armenian:wght@400;600;700&family=Noto+Sans+Armenian:wght@400;500;600&family=Poiret+One"
+PAGES["dasi-8"] = build_hw8
+if __name__ == "__main__":
+    d = os.path.join(SITE, "hw", "dasi-8"); os.makedirs(d, exist_ok=True)
+    open(os.path.join(d, "index.html"), "w", encoding="utf8").write(build_hw8()); print("wrote dasi-8")

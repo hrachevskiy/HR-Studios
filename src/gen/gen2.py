@@ -12,7 +12,7 @@ WORKS = [
  dict(t='Աշխատանքային ռեսուրսների վերլուծություն', l='Դաս 6', img='team', items=[('📒','Ինտերակտիվ «տետր»','hw/dasi-6/index.html','2 վերլուծություն · 12 գործոն'),('📗','Excel լուծում','files/Das6_Ashkhatank_Hrachya_Aslanyan.xlsx','91 բանաձև · 2 գծապատկեր')], page='lesson-6.html'),
  dict(t='1-ին միջանկյալ ստուգում (մատյան № 5)', l='Միջանկյալ', img='midterm', items=[('📊','Ինտերակտիվ դաշբորդ + PDF դիտիչ','hw/mijankyal/index.html','հանձնված աշխատանքը՝ 5 խնդիր'),('📄','PDF հաշվետվություն','files/Mijankyal_Hrachya_Aslanyan_N5.pdf','24 էջ'),('📗','Excel լուծում','files/Mijankyal_Hrachya_Aslanyan_N5.xlsx','6 թերթ · n-ը փոփոխելի')], page='index.html#library'),
  dict(t='Դրամական միջոցների վերլուծություն', l='Դաս 7', img='cashflow', items=[('🎬','Անիմացիոն ներկայացում','t7/index.html','18 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t7/index.html#excel','բոլոր աղյուսակները'),('📗','Excel լուծում','files/Tema7_Dramakan_mijocner_Hrachya_Aslanyan.xlsx','527 բանաձև · 9 գծապատկեր')], page='lesson-7.html'),
- dict(t='Դեբիտորական և կրեդիտորական պարտքեր', l='Դաս 8', img='handshake', items=[('🎬','Անիմացիոն ներկայացում','t8/index.html','16 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t8/index.html#excel','9 բաժին'),('📗','Excel լուծում','files/Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx','376 բանաձև · 9 գծապատկեր')], page='lesson-8.html'),
+ dict(t='Դեբիտորական և կրեդիտորական պարտքեր', l='Դաս 8', img='handshake', items=[('🏛','Ինտերակտիվ հաշվետվություն (ար-դեկո)','hw/dasi-8/index.html','գործակիցներ, գործոնային վերլուծություն'),('📗','Excel լուծում','files/Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx','376 բանաձև · 9 գծապատկեր')], page='lesson-8.html'),
 ]
 
 CSS2 = r'''
@@ -136,14 +136,14 @@ const s=document.getElementById('srch2');s&&s.addEventListener('input',()=>{cons
 
 def wpanel():
     g = ''.join(f'''<div class="wgrp"><div class="ph" style="background-image:url('assets/gen/{w["img"]}_s.jpg')"><b>{w["l"]}</b></div><div><h4>{E(w["t"])}</h4>{"".join(f'<a class="witem" href="{u}"{" download" if u.endswith((".xlsx",".pdf")) else ""}><span class="ic">{ic}</span><span><b>{E(n)}</b><small>{E(s)}</small></span></a>' for ic,n,u,s in w["items"])}</div></div>''' for w in WORKS)
-    return f'''<div class="wpanel" id="wpanel" role="dialog" aria-label="Իմ աշխատանքները"><h3>Իմ աշխատանքները</h3><p class="sd2">Բոլոր ներկայացումները, դաշբորդները և Excel լուծումները՝ Հրաչյա Ասլանյան · H/R Studios</p>{g}
+    return f'''<div class="wpanel" id="wpanel" role="dialog" aria-label="Լուծված առաջադրանքներ"><h3>Լուծված առաջադրանքներ</h3><p class="sd2">Բոլոր ներկայացումները, դաշբորդները և Excel լուծումները՝ Հրաչյա Ասլանյան · H/R Studios</p>{g}
 <div class="wfoot"><span class="tag">Շուտով՝ դասեր 1–6-ի լուծումները</span><a class="btn gh" href="works.html">Բոլորը մեկ էջում →</a></div></div>'''
 
 def header(active, root=''):
     items = [('index.html#top', 'Գլխավոր', 'home'), ('index.html#lessons', 'Դասեր', 'lessons'), ('index.html#library', 'Նյութեր', 'library'), ('index.html#how', 'Ինչպես օգտվել', 'how'), ('index.html#about', 'Մեր մասին', 'about')]
     nav = ''.join(f'<a href="{root}{h}" class="{"on" if k==active else ""}">{t}</a>' for h, t, k in items)
     return f'''<div class="prog" id="prog"></div><div class="cglow" id="cglow"></div><header class="hdr"><div class="wrap in"><a class="logo" href="{root}index.html"><img class="lim" src="assets/logo_sm.png" alt="H/R Studios"><span class="wd">H/R Studios<small>ՈՒՍՈՒՄՆԱԿԱՆ ՀԱՐԹԱԿ</small></span></a>
-<button class="works-btn" id="wbtn" aria-expanded="false"><span class="dot"></span><span class="t">Իմ աշխատանքները</span><span>▾</span></button>
+<button class="works-btn" id="wbtn" aria-expanded="false"><span class="dot"></span><span class="t">Լուծված առաջադրանքներ</span><span>▾</span></button>
 <nav class="nav" id="nav">{nav}</nav><button class="burger" aria-label="Մենյու" onclick="document.getElementById('nav').classList.toggle('open')">☰</button></div></header>{wpanel()}'''
 
 def footer():
@@ -217,7 +217,7 @@ def build_index():
 <div class="wrap"><div><div class="kick rv">H/R Studios · ԻՏ-447 · 2026–2027</div>
 <h1>{words("Տնտեսական գործունեության վերլուծություն")}<br>{words("բոլոր դասերը մեկ տեղում", "gr", 3)}</h1>
 <p class="lead rv">Դասախոսի սլայդները և ֆայլերը՝ պարզ ու գեղեցիկ տեսքով, յուրաքանչյուր թեմայի բացատրությունը պարզ լեզվով, լուծված տնայինները, Excel ֆայլերը և անիմացիոն ներկայացումները։</p>
-<div class="ctas rv"><a class="btn" href="#lessons">{ICON["play"]}Դիտել դասերը</a><a class="btn gh" href="works.html">🎬 Իմ աշխատանքները</a><a class="btn gh" href="#library">{ICON["grid"]}Գրադարան</a></div>
+<div class="ctas rv"><a class="btn" href="#lessons">{ICON["play"]}Դիտել դասերը</a><a class="btn gh" href="works.html">🎬 Լուծված առաջադրանքներ</a><a class="btn gh" href="#library">{ICON["grid"]}Գրադարան</a></div>
 <div class="author rv"><span class="av">ՀԱ</span><div><b>Հրաչյա Ասլանյան</b><small>Հեղինակ · ՀԱՊՀ, ԻՏ-447 · Դասախոս՝ {E(TEACHER)}</small></div></div></div>
 <a class="hcard rv" href="t8/index.html"><img src="assets/gen/desk.jpg" alt=""><div class="cap"><div><b>Նոր՝ Դաս 8 ներկայացում</b><small>Դեբիտորական և կրեդիտորական պարտքեր</small></div><span class="btn" style="padding:9px 14px">{ICON["play"]}</span></div></a></div></section>
 <div class="marq"><div class="tr">{marq}</div></div>
@@ -240,10 +240,10 @@ def works_cards():
 def build_works():
     body = f'''{header('')}
 <section class="hero2" style="min-height:min(560px,80vh)"><div class="bgi" style="background-image:url('assets/gen/works.jpg')"></div><i class="orb a"></i><i class="orb b"></i>
-<div class="wrap" style="grid-template-columns:1fr"><div><div class="kick">H/R Studios · Հրաչյա Ասլանյան</div><h1>{words("Իմ աշխատանքները")}</h1><p class="lead">Ներկայացումներ, դաշբորդներ և Excel լուծումներ՝ «{E(COURSE)}» առարկայից։</p></div></div></section>
+<div class="wrap" style="grid-template-columns:1fr"><div><div class="kick">H/R Studios · Հրաչյա Ասլանյան</div><h1>{words("Լուծված առաջադրանքներ")}</h1><p class="lead">Ներկայացումներ, դաշբորդներ և Excel լուծումներ՝ «{E(COURSE)}» առարկայից։</p></div></div></section>
 <section class="sec"><div class="wrap"><div class="wkgrid">{works_cards()}</div></div></section>
 {footer()}{gen.JS}</body></html>'''
-    open(os.path.join(SITE, 'works.html'), 'w').write(gen.head('Իմ աշխատանքները · H/R Studios', 'Հրաչյա Ասլանյանի աշխատանքները') + body)
+    open(os.path.join(SITE, 'works.html'), 'w').write(gen.head('Լուծված առաջադրանքներ · H/R Studios', 'Հրաչյա Ասլանյանի աշխատանքները') + body)
 
 if __name__ == '__main__':
     gen.CSS += CSS2

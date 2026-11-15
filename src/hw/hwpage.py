@@ -140,7 +140,7 @@ FONTS = {
 BASE_CSS = r"""
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;-webkit-font-smoothing:antialiased}img{max-width:100%;display:block}
 a{color:inherit}.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 10px;text-align:right;vertical-align:middle}
+html,body{overflow-x:clip}.two>*,.g2>*,.inner>*,section>*,.wrap>*{min-width:0}.tabs{overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}.tabs>*{flex:none}.tw{overflow-x:auto;min-width:0;max-width:100%;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 10px;text-align:right;vertical-align:middle}
 th:first-child,td:first-child{text-align:left}code{font-size:12.5px;white-space:nowrap}td small{opacity:.75}
 .vd{font-weight:700;white-space:nowrap;font-size:13px}
 .ch{width:100%;height:auto;display:block;overflow:visible}.ch text{font-size:12px}.ch .vl{font-size:11.5px;font-weight:700}
@@ -173,7 +173,7 @@ def page(theme, title, body, css, desc):
 
 def topbar(xl, lesson_href, label):
     return (f'<header class="topbar"><a class="lg" href="../../index.html"><img src="../../assets/logo_sm.png" alt="H/R">H/R Studios</a><span class="sp"></span>'
-            f'<a class="b hide" href="../../{lesson_href}">← {E(label)}</a><a class="b hide" href="../../works.html">Իմ աշխատանքները</a><a class="b x" href="../../files/{xl}" download>⬇ Excel</a></header>')
+            f'<a class="b hide" href="../../{lesson_href}">← {E(label)}</a><a class="b hide" href="../../works.html">Լուծված առաջադրանքներ</a><a class="b x" href="../../files/{xl}" download>⬇ Excel</a></header>')
 
 # ======================= 1) PAPER — financial newspaper =======================
 CSS_PAPER = r"""

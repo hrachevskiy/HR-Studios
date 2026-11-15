@@ -149,10 +149,10 @@ TL = [("18.09.2026", "Դասեր 2–3", "Իրացվելիություն և կա
       ("10.10.2026", "Դաս 6", "Աշխատանքային ռեսուրսներ", "Դպրոցական տետր", "#6a4c93", "assets/hw/note/09_s.jpg", "hw/dasi-6/index.html"),
       ("27.10.2026", "1-ին միջանկյալ", "5 խնդիր · մատյան № 5", "Liquid glass դաշբորդ", "#d4ff3a", "assets/hw/mij/06_s.jpg", "hw/mijankyal/index.html"),
       ("08.11.2026", "Դաս 7", "Դրամական միջոցներ", "Նեոնային ներկայացում", "#3dff8f", "assets/gen/cashflow_s.jpg", "t7/index.html"),
-      ("14.11.2026", "Դաս 8", "Դեբիտորական և կրեդիտորական պարտքեր", "Կինեմատոգրաֆիկ ներկայացում", "#5cd6ff", "assets/gen/handshake_s.jpg", "t8/index.html")]
+      ("14.11.2026", "Դաս 8", "Դեբիտորական և կրեդիտորական պարտքեր", "Ար-դեկո բանկային հաշվետվություն", "#d4af37", "assets/hw/deco/03_s.jpg", "hw/dasi-8/index.html")]
 def timeline():
     it = "".join(f'''<a class="tli rv {'r' if i % 2 else 'l'}" href="{h}" style="--c:{c}"><span class="tdot"></span><div class="tcard"><img src="{im}" alt="" loading="lazy"><div><small>{E(d)} · {E(l)}</small><b>{E(t)}</b><em>🎨 {E(st)}</em></div></div></a>''' for i, (d, l, t, st, c, im, h) in enumerate(TL))
-    return f'<section class="sec"><div class="wrap"><div class="kick rv">Ժամանակագրություն</div><h2 class="rv">Իմ ճանապարհը առարկայում</h2><p class="sd rv">Յուրաքանչյուր աշխատանք արված է իր ժամանակին և իր ոճով։</p><div class="tline"><i class="tax"></i>{it}</div></div></section>'
+    return f'<section class="sec"><div class="wrap"><div class="kick rv">Ժամանակագրություն</div><h2 class="rv">Առաջադրանքները՝ դասից դաս</h2><p class="sd rv">Յուրաքանչյուր առաջադրանք՝ իր ամսաթվով և իր ձևավորմամբ։</p><div class="tline"><i class="tax"></i>{it}</div></div></section>'
 def patch_works():
     p = os.path.join(SITE, "works.html"); s = open(p, encoding="utf8").read()
     s = s.replace('<section class="sec"><div class="wrap"><div class="wkgrid">', timeline() + '<section class="sec"><div class="wrap"><div class="wkgrid">', 1)
