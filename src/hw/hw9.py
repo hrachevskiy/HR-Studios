@@ -265,7 +265,7 @@ def waveband(cls=""):
     return f'<div class="waveband {cls}"><svg viewBox="0 0 3200 90" preserveAspectRatio="none"><path d="{d} L3200 90 L0 90 Z" fill="url(#sg)" stroke="#f6efe0" stroke-width="3"/>{foam}</svg></div>'
 
 def build_hw9():
-    wb = openpyxl.load_workbook(os.path.join(SITE, "files", XL), data_only=True); a, b = wb["Ձևանմուշ · Տնային 1"], wb["Ձևանմուշ · Տնային 2"]
+    wb = openpyxl.load_workbook(os.path.join(os.path.dirname(__file__), "..", "work", "Tema10_calc.xlsx"), data_only=True); a, b = wb["Ձևանմուշ · Տնային 1"], wb["Ձևանմուշ · Տնային 2"]
     g = lambda ws, r, c: ws.cell(r, c).value
     E5 = lambda r: g(a, r, 5); F6 = lambda r: g(a, r, 6); G7 = lambda r: g(a, r, 7)
     vv = lambda x, d, p, s=False: (n(x * 100, d, s) + "%") if p else n(x, d, s)

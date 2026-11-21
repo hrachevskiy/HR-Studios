@@ -9,7 +9,7 @@ SRC, OUT = sys.argv[1], sys.argv[2]
 wb = openpyxl.load_workbook(SRC)
 a, b = wb.worksheets[0], wb.worksheets[1]
 F = 'Sylfaen'
-GRN = PatternFill('solid', fgColor='E2F5E9'); HDR = PatternFill('solid', fgColor='0F5132'); YEL = PatternFill('solid', fgColor='FFF4CC')
+GRN = PatternFill('solid', fgColor='FFE2F5E9', bgColor='FFE2F5E9'); HDR = PatternFill('solid', fgColor='FF0F5132', bgColor='FF0F5132'); YEL = PatternFill('solid', fgColor='FFFFF4CC', bgColor='FFFFF4CC')
 thin = Side(style='thin', color='9AA5A0'); BOX = Border(left=thin, right=thin, top=thin, bottom=thin)
 def f(c, v, fmt=None, bold=False, fill=GRN, color='000000', sz=12):
     c.value = v; c.font = Font(name=F, sz=sz, bold=bold, color=color); c.border = BOX
@@ -153,14 +153,14 @@ BANNER = sys.argv[3] if len(sys.argv) > 3 else None
 BOWL = sys.argv[4] if len(sys.argv) > 4 else None
 
 INKc, INDc, IND2c, IND3c, REDc, GOLDc, PAPc, PAP2c, GRN = '1B1A24', '1F3A68', '2F5D8F', '8FB3D1', 'C8102E', 'D4A537', 'EFE3C8', 'F7EFDC', '1D7A3E'
-fill = lambda c: PatternFill('solid', fgColor=c)
+fill = lambda c: PatternFill('solid', fgColor='FF' + c, bgColor='FF' + c)
 S1, S2 = "'Տնային 1'", "'Տնային 2'"
 a.title = 'Ձևանմուշ · Տնային 1'; b.title = 'Ձևանմուշ · Տնային 2'
 S1, S2 = "'Ձևանմուշ · Տնային 1'", "'Ձևանմուշ · Տնային 2'"
 for ws in (a, b):
     ws.sheet_properties.tabColor = '9C8F7A'
 
-thinI = Side(style='thin', color='B9AE97'); thickI = Side(style='medium', color=INKc)
+thinI = Side(style='thin', color='FF8C8170'); ALLB = Border(left=thinI, right=thinI, top=thinI, bottom=thinI); thickI = Side(style='medium', color=INKc)
 def box(ws, rng, color=INKc):
     rows = list(ws[rng]); s = Side(style='medium', color=color)
     for i, row in enumerate(rows):
@@ -208,12 +208,12 @@ def nav(ws, row, here, last='N'):
 def hdr(ws, row, c0, labels, bg=INKc):
     for i, t in enumerate(labels):
         c = ws.cell(row, c0 + i, t); c.font = Font(name=F, sz=10, bold=True, color='FFFFFF'); c.fill = fill(bg)
-        c.alignment = Alignment(horizontal='center' if i else 'left', vertical='center', wrap_text=True); c.border = Border(bottom=Side(style='medium', color=REDc))
+        c.alignment = Alignment(horizontal='center' if i else 'left', vertical='center', wrap_text=True); c.border = Border(left=thinI, right=thinI, top=thinI, bottom=Side(style='medium', color='FF' + REDc))
     ws.row_dimensions[row].height = 30
 
 def rowfmt(ws, row, c0, n, zebra, fmts):
     for i in range(n):
-        c = ws.cell(row, c0 + i); c.fill = fill('F1E6CC' if zebra else 'FBF6EA'); c.border = Border(bottom=thinI)
+        c = ws.cell(row, c0 + i); c.fill = fill('F1E6CC' if zebra else 'FFFFFF'); c.border = ALLB
         c.font = Font(name=F, sz=11, bold=c.font.bold, color=c.font.color.rgb if c.font and c.font.color and isinstance(c.font.color.rgb, str) else INKc)
         if i: c.alignment = Alignment(horizontal='right', vertical='center')
         else: c.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
@@ -506,6 +506,8 @@ c.freeze_panes = 'A5'
 
 for ws in wb.worksheets:
     ws.page_setup.orientation = 'landscape'; ws.page_setup.fitToWidth = 1; ws.page_setup.fitToHeight = 0; ws.sheet_properties.pageSetUpPr.fitToPage = True
+from openpyxl.workbook.properties import CalcProperties
+wb.calculation = CalcProperties(fullCalcOnLoad=True)
 wb.active = 0
 for ws in wb.worksheets: ws.sheet_view.tabSelected = (ws.title == 'Վահանակ')
 wb.save(OUT); print('saved', OUT)

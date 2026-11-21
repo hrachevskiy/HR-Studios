@@ -179,7 +179,7 @@ code{color:var(--ind);font:700 12.5px 'Noto Sans Armenian'}
 @media (max-width:700px){.g2,.g3{grid-template-columns:1fr}.vtag{display:none}.hero::after{background:linear-gradient(180deg,rgba(239,227,200,.92),rgba(239,227,200,.85) 70%,rgba(239,227,200,.35))}
  .hero h1{font-size:clamp(22px,6.5vw,40px);overflow-wrap:anywhere}.kake{padding:36px 20px}.sh svg.en{width:66px;height:66px}.sh{gap:14px}.pn{padding:14px}.g4{gap:12px}.kpi b{font-size:22px}.kpi .hk{width:36px;height:36px;font-size:11px}}
 @media (prefers-reduced-motion:reduce){.brush{clip-path:none!important}.kake .bdy{clip-path:none}#petals{display:none}.waveband svg{animation:none}}
-</style><link rel="stylesheet" href="../../assets/hr-extra.css"></head><body class="t-wave" data-cur="2000"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+</style></head><body class="t-wave" data-cur="2000"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <linearGradient id="kg" x1="0" x2="1"><stop offset="0" stop-color="#fbe7a1"/><stop offset=".5" stop-color="#d4a537"/><stop offset="1" stop-color="#8a6510"/></linearGradient>
 <filter id="rgh" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
 <filter id="brs" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".8 .04" numOctaves="2" seed="5" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6"/></filter>
@@ -261,4 +261,4 @@ addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('on')});
 if(matchMedia('(pointer:fine)').matches)document.querySelectorAll('[data-tilt]').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(900px) rotateY('+(x*7)+'deg) rotateX('+(-y*7)+'deg)'});c.addEventListener('mouseleave',()=>c.style.transform='')});
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{const g=b.closest('[data-tabs]');g.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));
  g.querySelectorAll('[data-pane]').forEach(p=>{const on=p.dataset.pane===b.dataset.tab;p.classList.toggle('on',on);if(on)p.querySelectorAll('.rv,.tw,.gauge,svg.ch').forEach(el=>{el.classList.add('in','play');el.querySelectorAll('[data-count]').forEach(cnt)})})}));
-})();</script><script src="../../assets/hr-data.js" defer></script><script src="../../assets/hr-extra.js" data-base="../../" defer></script></body></html>
+})();</script></body></html>
