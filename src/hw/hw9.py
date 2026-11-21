@@ -37,7 +37,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 @keyframes stamp{to{transform:scale(1) rotate(-8deg);opacity:1}}
 /* ---------- hero ---------- */
 .hero{min-height:100vh;align-items:center;color:var(--ink);background:var(--paper)}
-.hero .bgart{position:absolute;inset:0;z-index:0;will-change:transform}.hero .bgart img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 8s ease-out}body.ready .hero .bgart img{transform:scale(1)}
+.hero .bgart{position:absolute;inset:-30px;z-index:0;will-change:transform;transition:transform .25s ease-out}.hero .bgart img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 8s ease-out}body.ready .hero .bgart img{transform:scale(1)}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(239,227,200,.97) 0%,rgba(239,227,200,.85) 40%,rgba(239,227,200,0) 72%)}
 .hero .inner{max-width:1240px;margin:0 auto;padding:120px 20px 130px;position:relative;z-index:3}
 .vtag{position:absolute;right:28px;top:110px;z-index:4;writing-mode:vertical-rl;font:700 14px 'Noto Sans Armenian';letter-spacing:.3em;color:#fff;background:var(--red);padding:16px 8px;box-shadow:4px 4px 0 var(--ink)}
@@ -62,6 +62,12 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .sh h2{font:900 clamp(28px,3.6vw,48px)/1.1 'Noto Serif Armenian';margin:0}.sh p{margin:6px 0 0;font:400 16px/1.6 'Noto Sans Armenian';color:#5a5160;max-width:760px}
 .kin{display:block;width:100%;height:60px;margin:10px 0}.kin path{fill:none;stroke:url(#kg);stroke-width:4;stroke-linecap:round;stroke-dasharray:1800;stroke-dashoffset:1800;transition:stroke-dashoffset 2.2s cubic-bezier(.6,0,.2,1);filter:drop-shadow(0 0 4px rgba(212,165,55,.8))}
 .kin.in path{stroke-dashoffset:0}
+.kin path.gl{stroke:#fffbe6;stroke-width:6;stroke-dasharray:70 2400;stroke-dashoffset:0;opacity:0;filter:drop-shadow(0 0 8px #ffe9a0)}.kin.in path.gl{opacity:1;animation:glint 4.5s linear 2.2s infinite}@keyframes glint{from{stroke-dashoffset:70}to{stroke-dashoffset:-2400}}
+.sh.in svg.en{animation:enrot 40s linear 1.5s infinite}@keyframes enrot{to{transform:rotate(360deg)}}.sh svg.en text{transform-box:fill-box;transform-origin:center}.sh.in svg.en text{animation:enrot 40s linear 1.5s infinite reverse}
+.kpi .hk{animation:none}.kpi.in .hk{animation:restamp 6s ease-in-out 3s infinite}@keyframes restamp{0%,88%,100%{transform:scale(1) rotate(-8deg)}93%{transform:scale(1.25) rotate(-2deg)}97%{transform:scale(.95) rotate(-10deg)}}
+.ic::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(212,165,55,.28) 50%,transparent 60%) no-repeat;background-size:250% 100%;background-position:150% 0;transition:background-position 1s}.ic:hover::after{background-position:-50% 0}
+.pn{transition:transform .35s,box-shadow .35s}.pn:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--red)}
+.byobu figure img{transition:filter .5s}.byobu figure:hover img{filter:saturate(1.2)}
 .pn{background:var(--paper2);border:2px solid var(--ink);box-shadow:6px 6px 0 rgba(27,26,36,.85);padding:20px;position:relative}
 .pn h3{margin:0 0 12px;font:800 18px 'Noto Serif Armenian';display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}.pn h3 small{font:500 12.5px 'Noto Sans Armenian';color:#7a6f7e}
 .pn::after{content:"";position:absolute;right:-2px;top:-2px;width:0;height:0;border-top:22px solid var(--red);border-left:22px solid transparent}
@@ -126,7 +132,7 @@ DEFS = f'''<svg width="0" height="0" style="position:absolute" aria-hidden="true
 <filter id="rgh" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
 <filter id="brs" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".8 .04" numOctaves="2" seed="5" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6"/></filter>
 <pattern id="sg" width="40" height="20" patternUnits="userSpaceOnUse"><rect width="40" height="20" fill="{IND}"/>
-{''.join(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{IND if k % 2 else IND2}" stroke="#f6efe0" stroke-opacity=".5" stroke-width="1"/>' for cx, cy in ((0, 20), (40, 20), (20, 10), (20, 30), (0, 0), (40, 0)) for k, r in enumerate((19, 15, 11, 7, 3)))}</pattern>
+{''.join(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{IND if k % 2 else IND2}" stroke="#f6efe0" stroke-opacity=".5" stroke-width="1"/>' for cx, cy in ((0, 20), (40, 20), (20, 10), (20, 30), (0, 0), (40, 0)) for k, r in enumerate((19, 15, 11, 7, 3)))}<animateTransform attributeName="patternTransform" type="translate" from="0 0" to="40 0" dur="6s" repeatCount="indefinite"/></pattern>
 </defs></svg>'''
 
 def kin(seed=1):
@@ -134,7 +140,7 @@ def kin(seed=1):
     while x < 1200:
         x += r.uniform(40, 110); y = max(6, min(54, y + r.uniform(-22, 22))); d += f" L{x:.0f} {y:.0f}"
     br = "".join(f'<path d="M{bx:.0f} {r.uniform(15,45):.0f} l{r.uniform(20,50):.0f} {r.uniform(-18,18):.0f} l{r.uniform(15,30):.0f} {r.uniform(-10,10):.0f}"/>' for bx in (r.uniform(100, 1100) for _ in range(4)))
-    return f'<div class="w9"><svg class="kin rv" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="{d}"/>{br}</svg></div>'
+    return f'<div class="w9"><svg class="kin rv" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="{d}"/>{br}<path class="gl" d="{d}"/></svg></div>'
 
 def sh(i, title, sub=""):
     return (f'<div class="sh rv"><svg class="en" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" transform="rotate(-60 50 50)"/><text x="50" y="66" text-anchor="middle">{ARM[i]}</text></svg>'
@@ -236,7 +242,9 @@ def spark(a, b, good):
 PETALS_JS = r"""<canvas id="petals"></canvas><script>
 (function(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.ndl').forEach(n=>n.style.transform='rotate('+n.dataset.rot+'deg)');e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.3});
 document.querySelectorAll('svg.ch,.sh,.kin,.kake,.ic,.kpi').forEach(s=>io.observe(s));
-const art=document.querySelector('.hero .bgart');addEventListener('scroll',()=>{if(art&&scrollY<innerHeight)art.style.transform='translateY('+scrollY*.3+'px)'},{passive:true});
+const art=document.querySelector('.hero .bgart');let my=0,mx=0,sy=0;const ap=()=>{if(art)art.style.transform='translate('+mx+'px,'+(sy*.3+my)+'px)'};
+addEventListener('scroll',()=>{if(scrollY<innerHeight){sy=scrollY;ap()}},{passive:true});
+if(matchMedia('(pointer:fine)').matches)addEventListener('mousemove',e=>{if(scrollY>innerHeight)return;mx=(e.clientX/innerWidth-.5)*-24;my=(e.clientY/innerHeight-.5)*-16;ap()},{passive:true});
 if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const c=document.getElementById('petals'),x=c.getContext('2d');let W,H,P=[],dpr=Math.min(2,devicePixelRatio||1);
 function rs(){W=c.width=innerWidth*dpr;H=c.height=innerHeight*dpr;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px'}rs();addEventListener('resize',rs);
 const N=innerWidth<700?12:26;function mk(y){return{x:Math.random()*W,y:y==null?Math.random()*H:y,s:(6+Math.random()*7)*dpr,r:Math.random()*6.28,vr:(Math.random()-.5)*.04,vx:(.3+Math.random()*.8)*dpr,vy:(.5+Math.random()*1)*dpr,p:Math.random()*6.28}}
@@ -318,7 +326,7 @@ def build_hw9():
              "<div class='knote rv'><b>11.1.4․</b> Սյունակները՝ t0 և t1, օրերը՝ 360-օրյա տարով (դասախոսության բանաձևով)։</div>")
     caps = ["Մեծ ալիք", "Աճի գրաֆիկ Ֆուձիի վրա", "Գիշերային կռունկներ", "Կինցուգի", "Սակուրա և մետաղադրամներ", "Բանկ-տաճար", "Մատյան-մագաղաթ", "Էնսո և արև", "Բյոբու", "Մետաղադրամների լեռ"]
     byobu = "".join(f'<figure><a href="{ART}/{k:02d}.svg" data-lb><img src="{ART}/{k:02d}.svg" alt="{E(c)}" loading="lazy"></a><figcaption>{E(c)}<i>{ARM[k]}</i></figcaption></figure>' for k, c in enumerate(caps))
-    mq = "".join(f'<img src="{ART}/{k:02d}.svg" alt="" loading="lazy">' for k in range(10))
+    mq = "".join(f'<img src="{ART}/{k:02d}_s.svg" alt="" loading="lazy">' for k in range(10))
     chap = lambda k, num, t, s: (f'<section class="chap"><div class="chi" data-par="0.25" style="background-image:url(\'{ART}/{k:02d}.svg\')"></div>'
                                  f'<div class="chc rv"><span class="chn">{E(num)}</span><h2>{E(t)}</h2><p>{E(s)}</p></div></section>')
     body = DEFS + H.topbar(XL, "lesson-9.html", "Դաս 9") + f"""
