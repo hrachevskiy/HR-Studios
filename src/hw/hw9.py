@@ -265,7 +265,7 @@ def waveband(cls=""):
     return f'<div class="waveband {cls}"><svg viewBox="0 0 3200 90" preserveAspectRatio="none"><path d="{d} L3200 90 L0 90 Z" fill="url(#sg)" stroke="#f6efe0" stroke-width="3"/>{foam}</svg></div>'
 
 def build_hw9():
-    wb = openpyxl.load_workbook(os.path.join(SITE, "files", XL), data_only=True); a, b = wb.worksheets[0], wb.worksheets[1]
+    wb = openpyxl.load_workbook(os.path.join(SITE, "files", XL), data_only=True); a, b = wb["Ձևանմուշ · Տնային 1"], wb["Ձևանմուշ · Տնային 2"]
     g = lambda ws, r, c: ws.cell(r, c).value
     E5 = lambda r: g(a, r, 5); F6 = lambda r: g(a, r, 6); G7 = lambda r: g(a, r, 7)
     vv = lambda x, d, p, s=False: (n(x * 100, d, s) + "%") if p else n(x, d, s)
@@ -366,7 +366,7 @@ def build_hw9():
 <section class="sec9"><div class="w9">{sh(5, "Կինցուգի․ հաշվարկի ծանոթագրություններ", "Կոտրված տեղերը չենք թաքցնում, այլ ոսկով ենք նշում։")}
 <div class="kgrid"><img class="rv" src="{ART}/03.svg" alt="Կինցուգի"><div>{notes}</div></div></div></section>
 <section class="sec9" style="padding-bottom:0"><div class="w9">{sh(6, "Բյոբու․ պատկերասրահ", "Բոլոր նկարազարդումները ստեղծված են կոդով՝ ուկիյո-է ոճով, հատուկ այս աշխատանքի համար։ Սեղմեք՝ մեծացնելու համար։")}</div><div class="byobu">{byobu}</div></section>
-<div class="foot9"><div class="hk2">ՀԱ</div><br>H/R STUDIOS · ՀՐԱՉՅԱ ԱՍԼԱՆՅԱՆ · ԻՏ-447 · EXCEL՝ 194 ԲԱՆԱՁԵՎ · 0 ՍԽԱԼ</div>
+<div class="foot9"><div class="hk2">ՀԱ</div><br>H/R STUDIOS · ՀՐԱՉՅԱ ԱՍԼԱՆՅԱՆ · ԻՏ-447 · EXCEL՝ 397 ԲԱՆԱՁԵՎ · 0 ՍԽԱԼ</div>
 {PETALS_JS}"""
     return P.page("wave", "Ֆինանսական պարտավորություններ", body, CSS, "Դաս 9 (Թեմա 10) տնային աշխատանք", 2000, RED)
 

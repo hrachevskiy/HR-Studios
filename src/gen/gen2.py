@@ -13,7 +13,7 @@ WORKS = [
  dict(t='1-ին միջանկյալ ստուգում (մատյան № 5)', l='Միջանկյալ', img='midterm', items=[('📊','Ինտերակտիվ դաշբորդ + PDF դիտիչ','hw/mijankyal/index.html','հանձնված աշխատանքը՝ 5 խնդիր'),('📄','PDF հաշվետվություն','files/Mijankyal_Hrachya_Aslanyan_N5.pdf','24 էջ'),('📗','Excel լուծում','files/Mijankyal_Hrachya_Aslanyan_N5.xlsx','6 թերթ · n-ը փոփոխելի')], page='index.html#library'),
  dict(t='Դրամական միջոցների վերլուծություն', l='Դաս 7', img='cashflow', items=[('🎬','Անիմացիոն ներկայացում','t7/index.html','18 սլայդ'),('📊','Տվյալների սրահ (դաշբորդ)','t7/index.html#excel','բոլոր աղյուսակները'),('📗','Excel լուծում','files/Tema7_Dramakan_mijocner_Hrachya_Aslanyan.xlsx','527 բանաձև · 9 գծապատկեր')], page='lesson-7.html'),
  dict(t='Դեբիտորական և կրեդիտորական պարտքեր', l='Դաս 8', img='handshake', items=[('🏛','Ինտերակտիվ հաշվետվություն (ար-դեկո)','hw/dasi-8/index.html','գործակիցներ, գործոնային վերլուծություն'),('📗','Excel լուծում','files/Tema8-9_Debitor_Kreditor_Hrachya_Aslanyan.xlsx','376 բանաձև · 9 գծապատկեր')], page='lesson-8.html'),
- dict(t='Ֆինանսական պարտավորություններ', l='Դաս 9', img='papers', items=[('🌊','Ինտերակտիվ «Ալիք և ոսկի» (ուկիյո-է)','hw/dasi-9/index.html','9 ցուցանիշ · գործոնային վերլուծություն · տնային 2'),('📗','Excel լուծում','files/Tema10_Finansakan_partavorutyunner_Hrachya_Aslanyan.xlsx','194 բանաձև · 4 գծապատկեր')], page='lesson-9.html'),
+ dict(t='Ֆինանսական պարտավորություններ', l='Դաս 9', img='papers', items=[('🌊','Ինտերակտիվ «Ալիք և ոսկի» (ուկիյո-է)','hw/dasi-9/index.html','9 ցուցանիշ · գործոնային վերլուծություն · տնային 2'),('📗','Excel լուծում','files/Tema10_Finansakan_partavorutyunner_Hrachya_Aslanyan.xlsx','397 բանաձև · 9 գծապատկեր · վահանակ')], page='lesson-9.html'),
 ]
 
 CSS2 = r'''
