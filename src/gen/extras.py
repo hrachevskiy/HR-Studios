@@ -60,6 +60,12 @@ CALC = {
    outs=[("ՇՐՋդպ · ԴՊ շրջանառելիություն", "rev/((r0+r1)/2)", 2, None, None), ("Tօր · ԴՊ պտույտ, օր", "360/(rev/((r0+r1)/2))", 1, None, None), ("Գռդպ · ռիսկային ԴՊ կշիռ", "risk/r1", 3, None, 0.1),
          ("ՇՐՋկպ · ԿՊ շրջանառելիություն", "cogs/((p0+p1)/2)", 2, None, None), ("ԿՊ պտույտ, օր", "360/(cogs/((p0+p1)/2))", 1, None, None),
          ("ՏԿժ.անց · ժամկետանց ԿՊ, %", "od/p1*100", 2, None, 10), ("Գդկհ · ԴՊ ÷ ԿՊ", "r1/p1", 3, 0.9, 1.1)]),
+ 9: dict(title="Ֆինանսական պարտավորություններ (հազ. դրամ)",
+   inputs=[("f0", "ՖՊ տարեսկզբին", 197000), ("f1", "ՖՊ տարեվերջին", 171000), ("rep", "Մարված ՖՊ (ՖՊմարվ)", 81000), ("cur", "Ընթացիկ ՖՊ տարեվերջին", 55000),
+           ("cl", "Ընթացիկ պարտավորություններ (ԸՊ)", 280000), ("od", "Ժամկետանց ՖՊ", 3000), ("bank", "Բանկային վարկեր", 150000), ("rev", "Հասույթ (Հ)", 1200000), ("np", "Զուտ շահույթ (ԶՇ)", 11000)],
+   outs=[("ՇՐՋֆպ · շրջանառելիություն", "rep/((f0+f1)/2)", 4, None, None), ("Tֆպ · պտույտ, օր", "((f0+f1)/2)/rep*360", 1, None, None), ("ՏԿֆպ · ԸՖՊ ÷ ԸՊ, %", "cur/cl*100", 2, None, None),
+         ("ՏԿժ.անց · ժամկետանց, %", "od/f1*100", 2, None, 5), ("ՏԿբվ · բանկային վարկեր, %", "bank/f1*100", 2, None, None), ("ՇԲԹֆպ · ԶՇ ÷ ՖՊ, %", "np/f1*100", 2, None, None),
+         ("Հ/ՖՊ · արդյունավետություն", "rev/f1", 3, None, None)]),
 }
 
 def quiz_data():
@@ -149,7 +155,8 @@ TL = [("18.09.2026", "Դասեր 2–3", "Իրացվելիություն և կա
       ("10.10.2026", "Դաս 6", "Աշխատանքային ռեսուրսներ", "Դպրոցական տետր", "#6a4c93", "assets/hw/note/09_s.jpg", "hw/dasi-6/index.html"),
       ("27.10.2026", "1-ին միջանկյալ", "5 խնդիր · մատյան № 5", "Liquid glass դաշբորդ", "#d4ff3a", "assets/hw/mij/06_s.jpg", "hw/mijankyal/index.html"),
       ("08.11.2026", "Դաս 7", "Դրամական միջոցներ", "Նեոնային ներկայացում", "#3dff8f", "assets/gen/cashflow_s.jpg", "t7/index.html"),
-      ("14.11.2026", "Դաս 8", "Դեբիտորական և կրեդիտորական պարտքեր", "Ար-դեկո բանկային հաշվետվություն", "#d4af37", "assets/hw/deco/03_s.jpg", "hw/dasi-8/index.html")]
+      ("14.11.2026", "Դաս 8", "Դեբիտորական և կրեդիտորական պարտքեր", "Ար-դեկո բանկային հաշվետվություն", "#d4af37", "assets/hw/deco/03_s.jpg", "hw/dasi-8/index.html"),
+      ("21.11.2026", "Դաս 9", "Ֆինանսական պարտավորություններ", "Ամբերային թրեյդինգ-տերմինալ", "#ffb000", "assets/hw/term/01_s.jpg", "hw/dasi-9/index.html")]
 def timeline():
     it = "".join(f'''<a class="tli rv {'r' if i % 2 else 'l'}" href="{h}" style="--c:{c}"><span class="tdot"></span><div class="tcard"><img src="{im}" alt="" loading="lazy"><div><small>{E(d)} · {E(l)}</small><b>{E(t)}</b><em>🎨 {E(st)}</em></div></div></a>''' for i, (d, l, t, st, c, im, h) in enumerate(TL))
     return f'<section class="sec"><div class="wrap"><div class="kick rv">Ժամանակագրություն</div><h2 class="rv">Առաջադրանքները՝ դասից դաս</h2><p class="sd rv">Յուրաքանչյուր առաջադրանք՝ իր ամսաթվով և իր ձևավորմամբ։</p><div class="tline"><i class="tax"></i>{it}</div></div></section>'
@@ -185,7 +192,7 @@ def inject(path, base):
     s = s.replace("</body>", f'<script src="{base}assets/hr-data.js" defer></script><script src="{base}assets/hr-extra.js" data-base="{base}" defer></script></body>', 1)
     # nav link to cheat-sheet (main-site header only)
     s = s.replace('<a href="index.html#how"', '<a href="formulas.html">Բանաձևեր</a><a href="index.html#how"', 1)
-    s = s.replace('<span class="tag">Շուտով՝ դասեր 1–6-ի լուծումները</span>', '<span class="tag">7 աշխատանք</span>')
+    s = s.replace('<span class="tag">Շուտով՝ դասեր 1–6-ի լուծումները</span>', f'<span class="tag">{len(gen2.WORKS)} աշխատանք</span>')
     open(path, "w", encoding="utf8").write(s)
 
 def main():

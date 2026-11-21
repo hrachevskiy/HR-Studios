@@ -1,1 +1,3 @@
-Build order: python3 hw/hwpage2.py && python3 gen/gen2.py && python3 gen/extras.py && python3 gen/retint.py
+Build order: python3 hw/hwpage2.py && python3 hw/hw9.py && python3 gen/gen2.py && python3 gen/extras.py && python3 gen/retint.py
+Lesson 9 Excel: python3 hw/mkxlsx_tema10.py <teacher template.xlsx> files/Tema10_Finansakan_partavorutyunner_Hrachya_Aslanyan.xlsx, then recalc with LibreOffice.
+hrmat (H/R deck + konspekt) per lesson: gen/hrmat.py
