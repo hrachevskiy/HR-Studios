@@ -1,0 +1,181 @@
+// H/R Workshop bot — Google Apps Script (webhook)
+var TOKEN = '__TOKEN__';
+var ADMIN_CODE = '__ADMIN__';
+var DEMO = 'https://hrachevskiy.github.io/HR-Studios/shop/';
+var CHANNEL = 'https://t.me/hr_workshop_am';
+var BANNER = 'https://hrachevskiy.github.io/HR-Studios/demo/img/bot_banner.jpg';
+var API = 'https://api.telegram.org/bot' + TOKEN + '/';
+var P = PropertiesService.getScriptProperties();
+
+function call(method, p) {
+  var r = UrlFetchApp.fetch(API + method, {method: 'post', contentType: 'application/json', payload: JSON.stringify(p), muteHttpExceptions: true});
+  try { return JSON.parse(r.getContentText()); } catch (e) { return {ok: false}; }
+}
+function getJ(k, d) { var v = P.getProperty(k); return v ? JSON.parse(v) : d; }
+function setJ(k, v) { P.setProperty(k, JSON.stringify(v)); }
+function kb(rows) { return {inline_keyboard: rows}; }
+function btn(t, d) { return {text: t, callback_data: d}; }
+function ubtn(t, u) { return {text: t, url: u}; }
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+var FOOT = '\n\n🇷🇺 <i>Можно писать на русском</i> · 🇬🇧 <i>English is fine too</i>';
+var TYPES = [['kurs', '📘 Կուրսային'], ['hw', '📊 Տնային / Excel'], ['pres', '🎞️ Պրեզենտացիա'], ['site', '🌐 Կայք / դաշբորդ'], ['diplom', '🎓 Ավարտական / ռեֆերատ'], ['other', '✨ Այլ']];
+var DEAD = [['d1', '⚡ 1–2 օր'], ['d3', '🗓 3–5 օր'], ['d7', '📅 1 շաբաթ'], ['d14', '🕰 2 շաբաթ և ավելի']];
+function tname(k) { for (var i = 0; i < TYPES.length; i++) if (TYPES[i][0] == k) return TYPES[i][1]; return k; }
+function dname(k) { for (var i = 0; i < DEAD.length; i++) if (DEAD[i][0] == k) return DEAD[i][1]; return k; }
+
+var WELCOME = '<b>H/R Workshop</b> · ակադեմիական աշխատանքներ՝ <b>wow</b> դիզայնով ✨\n\n' +
+  '📘 Կուրսայիններ՝ վերլուծությամբ և 15–20 գրաֆիկով\n📊 Տնայիններ և Excel՝ աշխատող բանաձևերով\n' +
+  '🎞️ Պրեզենտացիաներ՝ անիմացիաներով\n🌐 Ինտերակտիվ կայքեր և դաշբորդներ\n\nԸնտրիր ստորև 👇' + FOOT;
+var HOW = '<b>Ինչպես է աշխատում</b>\n\n1️⃣ Սեղմիր «Պատվիրել» և ընտրիր աշխատանքի տեսակը\n2️⃣ Գրիր առարկան և թեման\n' +
+  '3️⃣ Նշիր ժամկետը\n4️⃣ Ուղարկիր պահանջները, ֆայլերը, լուսանկարները\n' +
+  '5️⃣ Մենք կպատասխանենք <b>այստեղ՝ այս չաթում</b> գնով և մանրամասներով\n\n🔒 Քո տվյալները չեն փոխանցվում երրորդ անձանց։' + FOOT;
+
+function mainMenu() {
+  return kb([[btn('🛒 Պատվիրել աշխատանք', 'order')], [ubtn('👀 Օրինակներ', DEMO), ubtn('📢 Ալիք', CHANNEL)], [btn('❓ Ինչպես է աշխատում', 'how'), btn('💬 Հարց տալ', 'ask')]]);
+}
+function U(uid) { return getJ('u_' + uid, {state: null, draft: {}, order: null}); }
+function saveU(uid, u) { setJ('u_' + uid, u); }
+function admin() { return P.getProperty('admin'); }
+function link(mid, uid) { P.setProperty('m_' + mid, String(uid)); }
+
+function showMenu(chat) {
+  var r = call('sendPhoto', {chat_id: chat, photo: BANNER, caption: WELCOME, parse_mode: 'HTML', reply_markup: mainMenu()});
+  if (!r.ok) call('sendMessage', {chat_id: chat, text: WELCOME, parse_mode: 'HTML', reply_markup: mainMenu()});
+}
+function startOrder(chat, uid) {
+  var u = U(uid); u.state = 'type'; u.draft = {}; saveU(uid, u);
+  var rows = [];
+  for (var i = 0; i < TYPES.length; i += 2) rows.push([btn(TYPES[i][1], 't_' + TYPES[i][0]), btn(TYPES[i + 1][1], 't_' + TYPES[i + 1][0])]);
+  rows.push([btn('✖️ Չեղարկել', 'cancel')]);
+  call('sendMessage', {chat_id: chat, text: '🛒 <b>Նոր պատվեր</b> · քայլ 1/4\n\nԻ՞նչ աշխատանք է պետք', parse_mode: 'HTML', reply_markup: kb(rows)});
+}
+function askTopic(chat) { call('sendMessage', {chat_id: chat, parse_mode: 'HTML', text: '✍️ <b>Քայլ 2/4</b>\n\nԳրիր <b>առարկան և թեման</b> (օրինակ՝ «Ֆինանսական վերլուծություն, ընկերության իրացվելիություն»)', reply_markup: kb([[btn('✖️ Չեղարկել', 'cancel')]])}); }
+function askDead(chat) {
+  call('sendMessage', {chat_id: chat, parse_mode: 'HTML', text: '⏳ <b>Քայլ 3/4</b>\n\nԵ՞րբ է պետք պատրաստ լինի (կամ գրիր կոնկրետ ամսաթիվը)',
+    reply_markup: kb([[btn(DEAD[0][1], 'd_' + DEAD[0][0]), btn(DEAD[1][1], 'd_' + DEAD[1][0])], [btn(DEAD[2][1], 'd_' + DEAD[2][0]), btn(DEAD[3][1], 'd_' + DEAD[3][0])], [btn('✖️ Չեղարկել', 'cancel')]])});
+}
+function askDetails(chat) {
+  call('sendMessage', {chat_id: chat, parse_mode: 'HTML', text: '📎 <b>Քայլ 4/4</b>\n\nՈւղարկիր պահանջները՝ տեքստ, ֆայլեր (docx, pdf, xlsx), լուսանկարներ, ձայնային հաղորդագրություն։ Կարող ես ուղարկել մի քանի հաղորդագրություն։\n\nԵրբ պատրաստ լինես, սեղմիր 👇',
+    reply_markup: kb([[btn('✅ Ուղարկել պատվերը', 'submit')], [btn('✖️ Չեղարկել', 'cancel')]])});
+}
+function header(uid, frm, oid, title) {
+  var name = esc(((frm.first_name || '') + ' ' + (frm.last_name || '')).trim());
+  var un = frm.username ? '@' + frm.username : 'առանց username';
+  return title + (oid ? ' · պատվեր <b>#' + oid + '</b>' : '') + '\n👤 <a href="tg://user?id=' + uid + '">' + name + '</a> (' + esc(un) + ') · id <code>' + uid + '</code>';
+}
+function relayToAdmin(m, uid) {
+  var a = admin(); if (!a) return false;
+  var h = call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: header(uid, m.from, U(uid).order, '💬 Հաղորդագրություն') + '\n<i>Պատասխանելու համար՝ reply արա</i>'});
+  if (h.ok) link(h.result.message_id, uid);
+  var c = call('copyMessage', {chat_id: a, from_chat_id: m.chat.id, message_id: m.message_id});
+  if (c.ok) link(c.result.message_id, uid);
+  return true;
+}
+function submit(chat, uid, frm) {
+  var u = U(uid), d = u.draft || {};
+  var oid = Number(P.getProperty('next') || 1); P.setProperty('next', String(oid + 1));
+  setJ('o_' + oid, {uid: uid, type: d.type, topic: d.topic, dead: d.dead, time: Utilities.formatDate(new Date(), 'Asia/Yerevan', 'yyyy-MM-dd HH:mm'), status: 'new'});
+  u.order = oid; u.state = 'chat'; saveU(uid, u);
+  var a = admin();
+  if (a) {
+    var r = call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: '🆕 <b>ՆՈՐ ՊԱՏՎԵՐ #' + oid + '</b>\n\n📂 Տեսակ՝ <b>' + esc(tname(d.type)) + '</b>\n📝 Թեմա՝ ' + esc(d.topic) + '\n⏳ Ժամկետ՝ ' + esc(d.dead) + '\n\n' + header(uid, frm, null, '') + '\n\n<i>Reply արա՝ հաճախորդին պատասխանելու համար</i>'});
+    if (r.ok) link(r.result.message_id, uid);
+    (d.msgs || []).forEach(function (mid) { var c = call('copyMessage', {chat_id: a, from_chat_id: chat, message_id: mid}); if (c.ok) link(c.result.message_id, uid); });
+  }
+  call('sendMessage', {chat_id: chat, parse_mode: 'HTML', text: '✅ <b>Պատվերը ընդունված է՝ #' + oid + '</b>\n\nՄենք կուսումնասիրենք պահանջները և կպատասխանենք <b>այստեղ</b>՝ գնով և ժամկետներով։ Եթե ինչ-որ բան մոռացել ես, պարզապես գրիր այս չաթում 💬' + FOOT, reply_markup: kb([[btn('🏠 Գլխավոր', 'menu')]])});
+}
+function handleAdmin(m) {
+  var a = admin(), t = m.text || '';
+  if (t.indexOf('/orders') == 0) {
+    var n = Number(P.getProperty('next') || 1), lines = [];
+    for (var i = n - 1; i >= 1 && lines.length < 15; i--) { var o = getJ('o_' + i, null); if (o) lines.push('#' + i + ' · ' + tname(o.type) + ' · ' + esc(String(o.topic || '').slice(0, 40)) + ' · ' + o.dead + ' · ' + o.status); }
+    return call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: '📋 <b>Վերջին պատվերները</b>\n\n' + (lines.join('\n') || 'Պատվերներ դեռ չկան')});
+  }
+  if (t.indexOf('/done') == 0) {
+    var id = (t.split(/\s+/)[1] || '').replace('#', ''), o2 = getJ('o_' + id, null);
+    if (o2) { o2.status = 'done'; setJ('o_' + id, o2); call('sendMessage', {chat_id: a, text: '✔️ #' + id + ' → done'}); }
+    return;
+  }
+  if (t.indexOf('/to ') == 0) {
+    var p = t.split(' '); var uid = p[1]; var txt = p.slice(2).join(' ');
+    var r = call('sendMessage', {chat_id: uid, text: txt}); return call('sendMessage', {chat_id: a, text: r.ok ? '📤 Ուղարկված է' : '⚠️ Չհաջողվեց'});
+  }
+  if (t.indexOf('/help') == 0 || t.indexOf('/start') == 0)
+    return call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: '🛠 <b>Ադմինի ռեժիմ</b>\n\n• Reply արա հաճախորդի հաղորդագրությանը → պատասխանը կգնա նրան (տեքստ, ֆայլ, նկար, ձայն)\n• /orders — վերջին պատվերները\n• /done 12 — պատվեր #12-ը ավարտված է\n• /to 123456789 տեքստ — գրել հաճախորդին id-ով'});
+  var rep = m.reply_to_message;
+  if (rep) {
+    var target = P.getProperty('m_' + rep.message_id);
+    if (target) {
+      var c = call('copyMessage', {chat_id: target, from_chat_id: m.chat.id, message_id: m.message_id});
+      call('setMessageReaction', {chat_id: m.chat.id, message_id: m.message_id, reaction: [{type: 'emoji', emoji: c.ok ? '👍' : '👎'}]});
+      if (!c.ok) call('sendMessage', {chat_id: a, text: '⚠️ Չհաջողվեց ուղարկել (հնարավոր է՝ հաճախորդը արգելափակել է բոտը)'});
+      return;
+    }
+  }
+  call('sendMessage', {chat_id: a, text: 'ℹ️ Հաճախորդին պատասխանելու համար reply արա նրա հաղորդագրությանը։ /help'});
+}
+function handleMsg(m) {
+  if (m.chat.type != 'private') return;
+  var chat = m.chat.id, uid = m.from.id, t = m.text || '';
+  if (t.indexOf('/admin') == 0) {
+    if (t.split(/\s+/).pop() == ADMIN_CODE) { P.setProperty('admin', String(chat)); call('sendMessage', {chat_id: chat, text: '✅ Դու ադմին ես։ Բոլոր պատվերներն ու հաղորդագրությունները կգան այստեղ։ /help'}); }
+    return;
+  }
+  if (admin() && String(chat) == admin()) return handleAdmin(m);
+  var u = U(uid);
+  if (t == '/start' || t == '/menu' || t.indexOf('/start ') == 0) {
+    if (t == '/start order') return startOrder(chat, uid);
+    return showMenu(chat);
+  }
+  if (t == '/order') return startOrder(chat, uid);
+  if (t == '/examples') return call('sendMessage', {chat_id: chat, text: '👀 Բացիր օրինակները և տես անիմացիաները սեփական աչքերով 👇', reply_markup: kb([[ubtn('🌐 Բոլոր օրինակները', DEMO)], [ubtn('📢 Ալիքը', CHANNEL)]])});
+  if (t == '/help') return call('sendMessage', {chat_id: chat, text: HOW, parse_mode: 'HTML', reply_markup: kb([[btn('🛒 Պատվիրել', 'order')]])});
+  var st = u.state;
+  if ((st == 'topic' || st == 'dead') && !t) return call('sendMessage', {chat_id: chat, text: '✍️ Խնդրում ենք գրել տեքստով'});
+  if (st == 'topic') { u.draft.topic = t; u.state = 'dead'; saveU(uid, u); return askDead(chat); }
+  if (st == 'dead') { u.draft.dead = t; u.state = 'details'; saveU(uid, u); return askDetails(chat); }
+  if (st == 'details') {
+    u.draft.msgs = u.draft.msgs || []; u.draft.msgs.push(m.message_id); saveU(uid, u);
+    if (u.draft.msgs.length == 1) call('sendMessage', {chat_id: chat, text: '📥 Ստացվեց։ Կարող ես ավելացնել ևս, կամ սեղմել «Ուղարկել պատվերը»', reply_markup: kb([[btn('✅ Ուղարկել պատվերը', 'submit')]])});
+    return;
+  }
+  if (st == 'type') return call('sendMessage', {chat_id: chat, text: '👆 Ընտրիր տեսակը վերևի կոճակներից'});
+  var ok = relayToAdmin(m, uid);
+  if (st != 'chat') {
+    u.state = 'chat'; saveU(uid, u);
+    call('sendMessage', {chat_id: chat, text: ok ? '📨 Հաղորդագրությունը ուղարկված է։ Կպատասխանենք այստեղ շուտով։' : '⏳ Շուտով կպատասխանենք։', reply_markup: kb([[btn('🛒 Ձևակերպել պատվեր', 'order')]])});
+  }
+}
+function handleCb(q) {
+  var d = q.data, chat = q.message.chat.id, uid = q.from.id, u = U(uid);
+  call('answerCallbackQuery', {callback_query_id: q.id});
+  if (d == 'order') return startOrder(chat, uid);
+  if (d == 'menu') return showMenu(chat);
+  if (d == 'how') return call('sendMessage', {chat_id: chat, text: HOW, parse_mode: 'HTML', reply_markup: kb([[btn('🛒 Պատվիրել', 'order')]])});
+  if (d == 'ask') { u.state = 'chat'; saveU(uid, u); return call('sendMessage', {chat_id: chat, text: '💬 Գրիր հարցը այստեղ, և մենք կպատասխանենք այս չաթում։'}); }
+  if (d == 'cancel') { u.state = null; u.draft = {}; saveU(uid, u); return call('sendMessage', {chat_id: chat, text: '✖️ Չեղարկված է', reply_markup: mainMenu()}); }
+  if (d.indexOf('t_') == 0 && u.state == 'type') {
+    u.draft.type = d.slice(2); u.state = 'topic'; saveU(uid, u);
+    call('editMessageText', {chat_id: chat, message_id: q.message.message_id, parse_mode: 'HTML', text: '🛒 Տեսակ՝ <b>' + tname(d.slice(2)) + '</b> ✓'});
+    return askTopic(chat);
+  }
+  if (d.indexOf('d_') == 0 && u.state == 'dead') {
+    u.draft.dead = dname(d.slice(2)); u.state = 'details'; saveU(uid, u);
+    call('editMessageText', {chat_id: chat, message_id: q.message.message_id, parse_mode: 'HTML', text: '⏳ Ժամկետ՝ <b>' + dname(d.slice(2)) + '</b> ✓'});
+    return askDetails(chat);
+  }
+  if (d == 'submit' && u.state == 'details') return submit(chat, uid, q.from);
+}
+function doPost(e) {
+  var lock = LockService.getScriptLock(); lock.tryLock(25000);
+  try {
+    var up = JSON.parse(e.postData.contents);
+    var cache = CacheService.getScriptCache(), key = 'up_' + up.update_id;
+    if (cache.get(key)) return ContentService.createTextOutput('ok');
+    cache.put(key, '1', 21600);
+    if (up.message) handleMsg(up.message); else if (up.callback_query) handleCb(up.callback_query);
+  } catch (err) { console.error(err); } finally { lock.releaseLock(); }
+  return ContentService.createTextOutput('ok');
+}
+function doGet() { return ContentService.createTextOutput('H/R Workshop bot is alive'); }
