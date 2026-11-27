@@ -95,6 +95,7 @@ footer .lang{margin-bottom:8px;color:#cfcde0}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.styles{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}nav .links{display:none}}
 @media(max-width:600px){.grid,.steps{grid-template-columns:1fr}.styles .st:nth-child(1){grid-column:span 2}}
 </style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <nav><div class="wrap">
@@ -258,6 +259,15 @@ document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
 });
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+<script>
+/* Telegram Mini App mode: full height, native links */
+(function(){var W=window.Telegram&&Telegram.WebApp;if(!W||!W.initData)return;
+try{W.ready();W.expand();W.setHeaderColor&&W.setHeaderColor('#0b0c12');W.setBackgroundColor&&W.setBackgroundColor('#0b0c12');}catch(e){}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.href;
+ if(/^https:\/\/t\.me\//.test(h)){e.preventDefault();W.openTelegramLink(h);if(/hrworkshop_bot/.test(h))setTimeout(function(){W.close();},300);}
+ else if(a.target=='_blank'&&/^https?:/.test(h)){e.preventDefault();W.openLink(h);}
+},true);})();
 </script>
 </body>
 </html>
