@@ -301,7 +301,7 @@ function handleAdmin(m) {
     var rr = call('sendMessage', {chat_id: uid, text: txt}); if (rr.ok) markOut(uid); return call('sendMessage', {chat_id: a, text: rr.ok ? '📤 Ուղարկված է' : '⚠️ Չհաջողվեց'});
   }
   if (t.indexOf('/help') == 0 || t.indexOf('/start') == 0)
-    return call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: '🛠 <b>Ադմինի ռեժիմ</b>\n\n• Reply արա հաճախորդի հաղորդագրությանը → պատասխանը կգնա նրան (տեքստ, ֆայլ, նկար, ձայն)\n• /orders — վերջին պատվերները\n• /done 12 — պատվեր #12-ը պատրաստ է → հաճախորդից կխնդրվի կարծիք\n• /status 12 work — կարգավիճակ հաճախորդին (work · check · info · fix · կամ ցանկացած տեքստ)\n• /stats — վիճակագրություն և աղբյուրներ\n• /reviews — կարծիքներ\n• /pub 3 — հրապարակել կարծիք #3-ը ալիքում (եթե թույլատրել է)\n• /queue — ալիքի գրառումների հերթը\n• /postnow — հրապարակել հաջորդ գրառումը հիմա\n• /to 123456789 տեքստ — գրել հաճախորդին id-ով\n\n<b>Նոր</b>\n• /q — արագ պատասխանների ցանկը · /q 12 price 15000 կամ reply-ով՝ /q ok\n• /sum 12 15000 — պատվերի գումարը (CRM)\n• /due 12 05.12 — հանձնման օրը (դրանից մեկ օր առաջ բոտը կառաջարկի պաշտպանության խոսք)\n• /ban 12 · /unban 123456789 · /bans — արգելափակում\n• /sheet — CRM աղյուսակի հղումը\n• /brief — օրվա ամփոփումը հիմա (ավտոմատ՝ ամեն օր 9:00)\n• /pollnow — հրապարակել հաջորդ հարցումը (ավտոմատ՝ կիրակի 19:00)'});
+    return call('sendMessage', {chat_id: a, parse_mode: 'HTML', text: '🛠 <b>Ադմինի ռեժիմ</b>\n\n• Reply արա հաճախորդի հաղորդագրությանը → պատասխանը կգնա նրան (տեքստ, ֆայլ, նկար, ձայն)\n• /orders — վերջին պատվերները\n• /done 12 — պատվեր #12-ը պատրաստ է → հաճախորդից կխնդրվի կարծիք\n• /status 12 work — կարգավիճակ հաճախորդին (work · check · info · fix · կամ ցանկացած տեքստ)\n• /stats — վիճակագրություն և աղբյուրներ\n• /reviews — կարծիքներ\n• /pub 3 — հրապարակել կարծիք #3-ը ալիքում (եթե թույլատրել է)\n• /queue — ալիքի գրառումների հերթը\n• /postnow — հրապարակել հաջորդ գրառումը հիմա\n• /to 123456789 տեքստ — գրել հաճախորդին id-ով\n\n<b>Նոր</b>\n• /q — արագ պատասխանների ցանկը · /q 12 price 15000 կամ reply-ով՝ /q ok\n• /sum 12 15000 — պատվերի գումարը (CRM)\n• /due 12 05.12 — հանձնման օրը (դրանից մեկ օր առաջ բոտը կառաջարկի պաշտպանության խոսք)\n• /ban 12 · /unban 123456789 · /bans — արգելափակում\n• /sheet — CRM աղյուսակի հղումը\n• /brief — օրվա ամփոփումը հիմա (ավտոմատ՝ ամեն օր 9:00)\n• /pollnow — հրապարակել հաջորդ հարցումը (ավտոմատ՝ կիրակի 19:00)\n• /crm — CRM կայքի հղումը · /crmpass — նոր գաղտնաբառ'});
   var rep = m.reply_to_message;
   if (rep) {
     var target = P.getProperty('m_' + rep.message_id);
@@ -448,6 +448,7 @@ function doPost(e) {
   var lock = LockService.getScriptLock(); lock.tryLock(25000);
   try {
     var up = JSON.parse(e.postData.contents);
+    if (up.crm) { lock.releaseLock(); return crmApi(up); }
     var cache = CacheService.getScriptCache(), key = 'up_' + up.update_id;
     if (cache.get(key)) return HtmlService.createHtmlOutput('ok');
     cache.put(key, '1', 21600);
@@ -721,9 +722,144 @@ function handleAdmin2(m, t, a) {
     try { var ss = crmBook(true); if (!P.getProperty('crmFilled')) { crmBackfill(); P.setProperty('crmFilled', '1'); } return say('📊 CRM աղյուսակ՝ ' + ss.getUrl()); }
     catch (e) { return say('⚠️ Google Sheets-ի թույլտվություն չկա։ Բացիր Apps Script-ը և մեկ անգամ գործարկիր setupAll ֆունկցիան։'); }
   }
+  if (t.indexOf('/crmpass') == 0) { crmNewPass(); return true; }
+  if (t.indexOf('/crm') == 0) return say('🗂 CRM՝ ' + CRM_PAGE + '\n👤 Login: <code>' + (P.getProperty('crm_user') || '—') + '</code>\n🔑 Գաղտնաբառը մոռացե՞լ ես → /crmpass');
   if (t.indexOf('/brief') == 0) { morningBrief(true); return true; }
   if (t.indexOf('/pollnow') == 0) return say(pollNext(true));
   return undefined;
+}
+
+/* ============================ WEB CRM API ============================ */
+// The CRM page (GitHub Pages) calls doPost with {crm:1, a:action, t:token, ...}.
+// Login + password are stored hashed in script properties; sessions live in CacheService.
+var CRM_PAGE = SITE + 'crm/';
+var ST_CODES = ['new', 'work', 'check', 'info', 'fix', 'done', 'cancel'];
+
+function sha(s) { return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s, Utilities.Charset.UTF_8)); }
+function randStr(n) {
+  var abc = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789', out = '';
+  while (out.length < n) {
+    var hex = Utilities.getUuid().replace(/-/g, '');
+    for (var i = 0; i + 2 <= hex.length && out.length < n; i += 2) { var v = parseInt(hex.substr(i, 2), 16); if (v < 232) out += abc[v % abc.length]; }
+  }
+  return out;
+}
+// creates a new password (old sessions stop working) and sends the credentials to the admin chat
+function crmNewPass() {
+  var user = P.getProperty('crm_user') || 'hrworkshop', pass = randStr(14), salt = randStr(16);
+  P.setProperties({crm_user: user, crm_salt: salt, crm_hash: sha(salt + pass), crm_ver: String(Number(P.getProperty('crm_ver') || 0) + 1)});
+  var a = admin();
+  if (a) call('sendMessage', {chat_id: a, parse_mode: 'HTML', disable_web_page_preview: true,
+    text: '🔐 <b>CRM մուտք · Вход в CRM</b>\n\n🌐 ' + CRM_PAGE + '\n👤 Login: <code>' + user + '</code>\n🔑 Password: <code>' + pass + '</code>\n\n<i>Ոչ մեկին մի ուղարկիր։ Նոր գաղտնաբառ՝ /crmpass (հները կդադարեն աշխատել)</i>'});
+  return 'sent';
+}
+
+function crmApi(req) {
+  var out;
+  try { out = crmRoute(req); } catch (e) { console.error(e); out = {ok: false, err: 'server', msg: String(e)}; }
+  return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function crmRoute(r) {
+  var c = CacheService.getScriptCache(), ver = P.getProperty('crm_ver') || '0';
+  if (r.a == 'login') {
+    var fails = Number(c.get('crm_fail') || 0);
+    if (fails >= 8) return {ok: false, err: 'locked'};
+    var salt = P.getProperty('crm_salt'), h = P.getProperty('crm_hash');
+    if (!h || String(r.u || '').trim() !== P.getProperty('crm_user') || sha(salt + String(r.p || '')) !== h) {
+      c.put('crm_fail', String(fails + 1), 900);
+      if (fails + 1 == 8 && admin()) call('sendMessage', {chat_id: admin(), text: '⚠️ CRM: 8 սխալ մուտքի փորձ։ Մուտքը փակված է 15 րոպեով։'});
+      Utilities.sleep(700);
+      return {ok: false, err: 'bad'};
+    }
+    var tok = randStr(40); c.put('crmt_' + ver + '_' + tok, '1', 21600); c.remove('crm_fail');
+    return {ok: true, token: tok};
+  }
+  var key = 'crmt_' + ver + '_' + String(r.t || '');
+  if (!r.t || !c.get(key)) return {ok: false, err: 'auth'};
+  c.put(key, '1', 21600);
+
+  if (r.a == 'data') return crmData();
+  if (r.a == 'logout') { c.remove(key); return {ok: true}; }
+
+  if (r.a == 'upd') {
+    var id = String(r.id), o = getJ('o_' + id, null); if (!o) return {ok: false, err: 'nf'};
+    var sent = false;
+    if (r.sum !== undefined) o.sum = r.sum === '' || r.sum === null ? '' : Number(r.sum);
+    if (r.due !== undefined) { if (r.due != o.due) o.pre = false; o.due = r.due || ''; }
+    if (r.note !== undefined) o.note = String(r.note).slice(0, 2000);
+    if (r.topic !== undefined) o.topic = String(r.topic).slice(0, 500);
+    if (r.status && ST_CODES.indexOf(r.status) >= 0 && r.status != 'done') {
+      var changed = o.status != r.status; o.status = r.status;
+      if (changed && r.notify && o.uid && TX.hy.st[r.status]) {
+        var cu = U(o.uid), m = call('sendMessage', {chat_id: o.uid, parse_mode: 'HTML', text: L(cu).st[r.status].replace('{id}', id)});
+        if (m.ok) { markOut(o.uid); sent = true; }
+      }
+    }
+    setJ('o_' + id, o); crm(id);
+    return {ok: true, sent: sent};
+  }
+  if (r.a == 'done') {
+    var did = String(r.id), d = getJ('o_' + did, null); if (!d) return {ok: false, err: 'nf'};
+    var first = d.status != 'done'; d.status = 'done'; setJ('o_' + did, d); crm(did);
+    if (first) { var dc = Number(P.getProperty('doneCount') || 0) + 1; P.setProperty('doneCount', String(dc)); updateCounter(dc); }
+    var asked = d.uid ? askReview(did) : false;
+    return {ok: true, asked: !!asked};
+  }
+  if (r.a == 'add') {
+    var nid = Number(P.getProperty('next') || 1); P.setProperty('next', String(nid + 1));
+    setJ('o_' + nid, {uid: 0, manual: true, client: String(r.client || '').slice(0, 100), type: r.type || 'other', topic: String(r.topic || '').slice(0, 500), dead: r.due || '', due: r.due || '', time: ytime(), ts: now(), status: 'new', lang: r.lang || 'hy', src: String(r.src || 'manual').slice(0, 40), meth: false, sum: r.sum ? Number(r.sum) : '', note: String(r.note || '').slice(0, 2000)});
+    crm(nid);
+    return {ok: true, id: nid};
+  }
+  if (r.a == 'msg') {
+    var uid = String(r.uid || ''); if (!uid || uid == '0') return {ok: false, err: 'nouid'};
+    var text;
+    if (r.tpl) {
+      var tu = U(uid), q = L2(tu).q[r.tpl]; if (!q) return {ok: false, err: 'tpl'};
+      if ((r.tpl == 'price' || r.tpl == 'prepay') && !(Number(r.x) > 0)) return {ok: false, err: 'sum'};
+      text = q.replace('{id}', r.oid || tu.order || '—').replace('{x}', fmtNum(r.x || '')).replace('{d}', REVISION_DAYS);
+      if (r.tpl == 'price' && r.oid) { var po = getJ('o_' + r.oid, null); if (po) { po.sum = Number(r.x); setJ('o_' + r.oid, po); crm(r.oid); } }
+    } else text = esc(String(r.text || '').slice(0, 3500));
+    if (!text) return {ok: false, err: 'empty'};
+    var s = call('sendMessage', {chat_id: uid, parse_mode: 'HTML', text: text});
+    if (s.ok) markOut(uid);
+    return {ok: !!s.ok, err: s.ok ? null : 'tg'};
+  }
+  if (r.a == 'ban') {
+    var bu = String(r.uid || ''); if (!bu || bu == admin()) return {ok: false};
+    if (r.on) P.setProperty('ban_' + bu, '1'); else P.deleteProperty('ban_' + bu);
+    return {ok: true};
+  }
+  if (r.a == 'seen') { var su = String(r.uid || ''), sx = U(su); sx.lastOut = now(); saveU(su, sx); return {ok: true}; }
+  if (r.a == 'pub') return {ok: publishReview(String(r.id)) == 'ok'};
+  if (r.a == 'postnow') return {ok: true, msg: postNext(true)};
+  return {ok: false, err: 'action'};
+}
+
+function crmData() {
+  var all = P.getProperties(), orders = [], users = [], reviews = [];
+  Object.keys(all).forEach(function (k) {
+    var v; try { v = k.indexOf('o_') == 0 || k.indexOf('u_') == 0 || k.indexOf('rv_') == 0 ? JSON.parse(all[k]) : null; } catch (e) { v = null; }
+    if (!v) return;
+    if (k.indexOf('o_') == 0) { v.id = Number(k.slice(2)); orders.push(v); }
+    else if (k.indexOf('u_') == 0) users.push({id: k.slice(2), name: v.name || '', lang: v.lang || '', src: v.src || 'direct', seen: v.seen || '', subs: v.subs || 0, started: v.started || 0, state: v.state || '', lastIn: v.lastIn || 0, lastOut: v.lastOut || 0, order: v.order || null, banned: all['ban_' + k.slice(2)] == '1'});
+    else { v.id = Number(k.slice(3)); reviews.push(v); }
+  });
+  var names = {}; users.forEach(function (u) { names[u.id] = u.name; });
+  orders.forEach(function (o) { o.client = o.client || names[String(o.uid)] || ''; });
+  var types = {}; TYPEKEYS.forEach(function (k) { types[k] = tname(k, 'ru'); });
+  return {ok: true, now: now(), today: yd(0), orders: orders, users: users, reviews: reviews, types: types,
+    done: Number(all.doneCount || 0), sheet: all.sheet ? 'https://docs.google.com/spreadsheets/d/' + all.sheet + '/edit' : '',
+    queue: {idx: Number(all.postIdx || 0), total: POSTS.length}, revDays: REVISION_DAYS};
+}
+
+// one-time v3 setup, run from the editor
+function zSetupV3() {
+  P.setProperty('free_ids', JSON.stringify(["BQACAgIAAxUHawrgvD9eQf2RDXq_7hR66ZE2SnYAAtamAAJUX1hIMaGEKakrC9c9BA","BQACAgIAAxUHawrgvASgXb2WSv1XB3joWRkOIwAD2KYAAlRfWEjfa6Z3PZZLPj0E","BQACAgIAAxUHawrgvGziLj7Oflw66-CN1rRrcpYAAtemAAJUX1hIVydmeJWBiPI9BA"]));
+  console.log('state ' + JSON.stringify({postIdx: P.getProperty('postIdx'), lastPost: P.getProperty('lastPost'), sheet: !!P.getProperty('sheet'), next: P.getProperty('next')}));
+  console.log('stickers ' + createStickers());
+  console.log('crm ' + crmNewPass());
 }
 
 /* ============================ CHANNEL CONTENT QUEUE ============================ */
